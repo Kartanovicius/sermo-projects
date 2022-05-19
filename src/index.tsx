@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import FirebaseContext from './context/firebase';
-import { firebase, fieldValue } from './lib/firebase';
 import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(
@@ -12,11 +10,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <FirebaseContext.Provider value={{ firebase, fieldValue }}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </FirebaseContext.Provider>,
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 );
 
