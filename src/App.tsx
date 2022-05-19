@@ -1,12 +1,24 @@
 import React from 'react';
 import { getApps } from 'firebase/app';
+import Signup from './pages/Signup';
+import { Route, Routes } from 'react-router-dom';
+import Signin from './pages/Signin';
+import Home from './pages/Home';
+import AuthProvider from './context/firebase'
 
 function App() {
   const firebaseApp = getApps()[0];
 
   return (
     <div className="App">
-      <pre>{JSON.stringify(firebaseApp.options, null, 2)}</pre>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Signin />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/home" element={<Home />} />
+        </Routes>
+      </AuthProvider>
+      {/* <pre>{JSON.stringify(firebaseApp.options, null, 2)}</pre> */}
     </div>
   );
 }
