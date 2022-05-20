@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import Signin from './pages/Signin';
 import Home from './pages/Home';
 import AuthProvider from './context/firebase'
+import HTTP404 from './pages/HTTP404';
 
 function App() {
   const firebaseApp = getApps()[0];
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/*" element={<HTTP404 />} />
         </Routes>
       </AuthProvider>
       {/* <pre>{JSON.stringify(firebaseApp.options, null, 2)}</pre> */}
