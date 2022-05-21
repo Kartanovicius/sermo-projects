@@ -4,7 +4,7 @@ import Signup from './pages/Signup';
 import { Route, Routes } from 'react-router-dom';
 import Signin from './pages/Signin';
 import Home from './pages/Home';
-import AuthProvider from './context/firebase'
+import AuthProvider from './context/authContext'
 import HTTP404 from './pages/HTTP404';
 
 function App() {
