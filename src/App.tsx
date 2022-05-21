@@ -8,7 +8,6 @@ import AuthProvider from './context/authContext'
 import HTTP404 from './pages/HTTP404';
 
 function App() {
-  const firebaseApp = getApps()[0];
 
   return (
     <div className="App">
@@ -20,7 +19,6 @@ function App() {
           <Route path="/*" element={<HTTP404 />} />
         </Routes>
       </AuthProvider>
-      {/* <pre>{JSON.stringify(firebaseApp.options, null, 2)}</pre> */}
     </div>
   );
 }
