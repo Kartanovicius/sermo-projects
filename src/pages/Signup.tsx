@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useRef } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -10,35 +10,137 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Copyright from '../components/Copyright'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/firebase'
+import FormAlert from '../components/signup/FormAlert';
 
 const theme = createTheme();
 
+interface alertInterface {
+  status: boolean
+  message: string
+}
+
+let alreadyCalled = 0;
+
 export default function SignUp() {
   const nameRef = useRef<HTMLInputElement>();
-  const familyRef = useRef<HTMLInputElement>();
+  const surnameRef = useRef<HTMLInputElement>();
   const emailRef = useRef<HTMLInputElement>();
   const passwordRef = useRef<HTMLInputElement>();
   const passwordConfirmRef = useRef<HTMLInputElement>();
+
+  const [nameErrorStatus, setNameErrorStatus] = useState<boolean>(false)
+  const [surnameErrorStatus, setSurnameErrorStatus] = useState<boolean>(false)
+  const [emailErrorStatus, setEmailErrorStatus] = useState<boolean>(false)
+  const [passwordErrorStatus, setPasswordErrorStatus] = useState<boolean>(false)
+  const [passwordConfirmErrorStatus, setPasswordConfirmErrorStatus] = useState<boolean>(false)
+
+  const [alert, setAlert] = useState<alertInterface>({'status': false, 'message': ''})
 
   const { createUser } = useAuth()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const nameVal: string | undefined = nameRef.current?.value;
+    const surnameVal: string | undefined = surnameRef.current?.value;
+    const emailVal: string | undefined = emailRef.current?.value;
+    const passwordVal: string | undefined = passwordRef.current?.value;
+    const passwordConfirmVal: string | undefined = passwordConfirmRef.current?.value;
+
+    let isValid: boolean = true;
 
     try {
-      await createUser(emailRef.current?.value, passwordRef.current?.value)
-    } catch (error) {
-      console.log(error)
+      // Check if all inputs filled
+      if (nameVal === '' || nameVal === undefined) {
+        setNameErrorStatus(true)
+        isValid = false
+      }
+      if (surnameVal === '' || surnameVal === undefined) {
+        setSurnameErrorStatus(true)
+        isValid = false
+      }
+      if (emailVal === '' || emailVal === undefined) {
+        setEmailErrorStatus(true)
+        isValid = false
+      }
+      if (passwordVal === '' || passwordVal === undefined) {
+        setPasswordErrorStatus(true)
+        isValid = false
+      }
+      if (passwordConfirmVal === '' || passwordConfirmVal === undefined) {
+        setPasswordConfirmErrorStatus(true)
+        isValid = false
+      }
+      if (isValid === false) {
+        throw new Error('form-incomplete');
+      }
+
+      // Does passwords match
+      if (passwordVal !== passwordConfirmVal) {        
+        throw new Error('Password-is-not-matching');
+      }
+
+       // Firebase auth
+       await createUser(emailRef.current?.value, passwordRef.current?.value).catch(function(error: { code: any; message: any; }){
+        alreadyCalled++;
+
+        var errorCode = error.code;
+        
+        if(errorCode === "auth/weak-password"){
+          setAlert({'status': true, 'message': 'Password should containt minimum 6 characters'})
+          setPasswordErrorStatus(true)
+          setPasswordConfirmErrorStatus(true)
+        }
+        if(errorCode === "auth/email-already-in-use"){
+          setEmailErrorStatus(true)
+          setAlert({'status': true, 'message': 'This email is already in use'})
+        }
+      })
+      
+    } catch (e) {
+      if (e instanceof Error) {
+        if (e.message === 'form-incomplete') {
+          setAlert({'status': true, 'message': 'Form is incomplete'})
+        }
+        if (e.message === 'Password-is-not-matching') {
+          setAlert({'status': true, 'message': "Passwords doesn't match"})
+          setPasswordErrorStatus(true)
+          setPasswordConfirmErrorStatus(true)
+        }
+        alreadyCalled++;
+      }
+    } finally {
+      if (alreadyCalled === 1) {
+        // Clear alert status and message
+        setTimeout(function() {
+          setAlert({'status': false, 'message': ''})
+          alreadyCalled = 0;
+        },5000)       
+      }
+      return;
     }
   };
+
+  function passwordOnChangeHandler() {
+    const passwordVal: string | undefined = passwordRef.current?.value;
+    const passwordConfirmVal: string | undefined = passwordConfirmRef.current?.value;
+
+    if (passwordVal !== '') {
+      setPasswordErrorStatus(false)
+    }
+    if (passwordConfirmVal !== '') {
+      setPasswordConfirmErrorStatus(false)
+    }
+  }
 
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
+
+        <FormAlert status={alert.status} message={alert.message}/>
+
         <Box
           sx={{
             marginTop: 8,
@@ -62,6 +164,8 @@ export default function SignUp() {
                   label="First Name"
                   autoFocus
                   inputRef={nameRef}
+                  error={nameErrorStatus}
+                  onChange={ (event) => event.target.value !== '' ? setNameErrorStatus(false) : undefined}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -71,8 +175,10 @@ export default function SignUp() {
                   id="lastName"
                   label="Last Name"
                   name="lastName"
-                  autoComplete="family-name"
-                  inputRef={familyRef}
+                  autoComplete="surname-name"
+                  inputRef={surnameRef}
+                  error={surnameErrorStatus}
+                  onChange={ (event) => event.target.value !== '' ? setSurnameErrorStatus(false) : undefined}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -84,6 +190,8 @@ export default function SignUp() {
                   name="email"
                   autoComplete="email"
                   inputRef={emailRef}
+                  error={emailErrorStatus}
+                  onChange={ (event) => event.target.value !== '' ? setEmailErrorStatus(false) : undefined}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -96,6 +204,8 @@ export default function SignUp() {
                   id="password"
                   autoComplete="new-password"
                   inputRef={passwordRef}
+                  error={passwordErrorStatus}
+                  onChange={passwordOnChangeHandler}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -108,6 +218,8 @@ export default function SignUp() {
                   id="confirm-password"
                   autoComplete="confirm-password"
                   inputRef={passwordConfirmRef}
+                  error={passwordConfirmErrorStatus}
+                  onChange={passwordOnChangeHandler}
                 />
               </Grid>
               <Grid item xs={12}>
