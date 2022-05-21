@@ -14,19 +14,19 @@ import {
   Box,
   Container
 } from '@mui/material';
-import Copyright from '../components/Copyright'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 //Components
-import FormAlert from '../components/signup/FormAlert';
+import FormAlert from '../components/FormAlert';
+import Copyright from '../components/Copyright'
 
 const theme = createTheme();
+let alreadyCalled = 0;
 
 interface alertInterface {
   status: boolean
   message: string
 }
 
-let alreadyCalled = 0;
 
 export default function SignUp() {
   const nameRef = useRef<HTMLInputElement>();
