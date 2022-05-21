@@ -3,15 +3,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/firebase'
 import { FirebaseError } from 'firebase/app';
 //Material UI
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+import { 
+  Typography,
+  Button,
+  CssBaseline,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Grid,
+  Box,
+  Container
+} from '@mui/material';
 import Copyright from '../components/Copyright'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 //Components
@@ -32,6 +34,7 @@ export default function SignUp() {
   const emailRef = useRef<HTMLInputElement>();
   const passwordRef = useRef<HTMLInputElement>();
   const passwordConfirmRef = useRef<HTMLInputElement>();
+  const termsCheckboxRef = useRef<HTMLInputElement>();
 
   const [nameErrorStatus, setNameErrorStatus] = useState<boolean>(false)
   const [surnameErrorStatus, setSurnameErrorStatus] = useState<boolean>(false)
@@ -52,6 +55,7 @@ export default function SignUp() {
     const emailVal: string | undefined = emailRef.current?.value;
     const passwordVal: string | undefined = passwordRef.current?.value;
     const passwordConfirmVal: string | undefined = passwordConfirmRef.current?.value;
+    const termsCheckboxVal: boolean | undefined = termsCheckboxRef.current?.checked;
 
     let isValid: boolean = true;
 
@@ -79,6 +83,10 @@ export default function SignUp() {
       }
       if (isValid === false) {
         throw new Error('form-incomplete');
+      }
+
+      if (termsCheckboxVal === false || termsCheckboxVal === undefined) {
+        throw new Error('terms-checkbox-not-selected');
       }
 
       // Does passwords match
@@ -110,6 +118,9 @@ export default function SignUp() {
           setAlert({'status': true, 'message': "Passwords doesn't match"})
           setPasswordErrorStatus(true)
           setPasswordConfirmErrorStatus(true)
+        }
+        if (e.message === 'terms-checkbox-not-selected') {
+          setAlert({'status': true, 'message': 'Please confirm terms and conditions'})
         }
       }
       alreadyCalled++;
@@ -227,8 +238,9 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
+                  control={<Checkbox color="primary" />}
                   label="I agree with terms and conditions"
+                  inputRef={termsCheckboxRef}
                 />
               </Grid>
             </Grid>
@@ -244,7 +256,9 @@ export default function SignUp() {
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link to="/">
-                  Already have an account? Sign in
+                  <Typography variant="body2" color='primary'>
+                    Already have an account? Sign in
+                  </Typography>
                 </Link>
               </Grid>
             </Grid>
