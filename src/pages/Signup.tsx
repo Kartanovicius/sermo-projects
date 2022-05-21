@@ -1,4 +1,8 @@
 import React, { useState, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/firebase'
+import { FirebaseError } from 'firebase/app';
+//Material UI
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -10,8 +14,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Copyright from '../components/Copyright'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../context/firebase'
+//Components
 import FormAlert from '../components/signup/FormAlert';
 
 const theme = createTheme();
@@ -39,6 +42,8 @@ export default function SignUp() {
   const [alert, setAlert] = useState<alertInterface>({'status': false, 'message': ''})
 
   const { createUser } = useAuth()
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -81,24 +86,22 @@ export default function SignUp() {
         throw new Error('Password-is-not-matching');
       }
 
-       // Firebase auth
-       await createUser(emailRef.current?.value, passwordRef.current?.value).catch(function(error: { code: any; message: any; }){
-        alreadyCalled++;
-
-        var errorCode = error.code;
-        
-        if(errorCode === "auth/weak-password"){
+      // Firebase auth
+      await createUser(emailRef.current?.value, passwordRef.current?.value)
+      
+      navigate('/home')
+    } catch (e) {
+      if (e instanceof FirebaseError) {
+        if(e.message.includes("auth/weak-password")){
           setAlert({'status': true, 'message': 'Password should containt minimum 6 characters'})
           setPasswordErrorStatus(true)
           setPasswordConfirmErrorStatus(true)
         }
-        if(errorCode === "auth/email-already-in-use"){
+        if(e.message.includes("auth/email-already-in-use")){
           setEmailErrorStatus(true)
           setAlert({'status': true, 'message': 'This email is already in use'})
         }
-      })
-      
-    } catch (e) {
+      }
       if (e instanceof Error) {
         if (e.message === 'form-incomplete') {
           setAlert({'status': true, 'message': 'Form is incomplete'})
@@ -108,8 +111,8 @@ export default function SignUp() {
           setPasswordErrorStatus(true)
           setPasswordConfirmErrorStatus(true)
         }
-        alreadyCalled++;
       }
+      alreadyCalled++;
     } finally {
       if (alreadyCalled === 1) {
         // Clear alert status and message
