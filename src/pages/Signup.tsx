@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/firebase'
+import { useAuth } from '../context/authContext'
 import { FirebaseError } from 'firebase/app';
 //Material UI
 import { 
