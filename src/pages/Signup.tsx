@@ -11,7 +11,7 @@ import {
   TextField,
   Grid,
   Box,
-  Container
+  Container,
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 //Components
@@ -31,7 +31,6 @@ export default function SignUp() {
   const emailRef = useRef<HTMLInputElement>();
   const passwordRef = useRef<HTMLInputElement>();
   const passwordConfirmRef = useRef<HTMLInputElement>();
-  const termsCheckboxRef = useRef<HTMLInputElement>();
 
   const [firstnameErrorStatus, setfirstnameErrorStatus] = useState<alertInterface>({'status': false, 'message': ''})
   const [lastnameErrorStatus, setlastnameErrorStatus] = useState<alertInterface>({'status': false, 'message': ''})
@@ -50,7 +49,6 @@ export default function SignUp() {
     const emailVal: string | undefined = emailRef.current?.value;
     const passwordVal: string | undefined = passwordRef.current?.value;
     const passwordConfirmVal: string | undefined = passwordConfirmRef.current?.value;
-    const termsCheckboxVal: boolean | undefined = termsCheckboxRef.current?.checked;
 
     try {
       // Check if all inputs filled
@@ -110,7 +108,7 @@ export default function SignUp() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="sm">
         <CssBaseline />
         <Box
           sx={{
@@ -120,10 +118,16 @@ export default function SignUp() {
             alignItems: 'center',
           }}
         >
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Box sx={{marginBottom: '40px'}}>
+              <Typography component="h1" variant="h4" align='left' sx={{width: '100%', marginBottom: '8px'}}>
+                Get started absolutely free.
+              </Typography>
+              <Typography variant="body2" align='left' sx={{width: '100%'}}>
+                Free forever. No credit card needed.
+              </Typography>
+            </Box>
+
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField

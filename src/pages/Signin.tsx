@@ -11,7 +11,8 @@ import {
   TextField,
   Grid,
   Box,
-  Container
+  Container,
+  Alert
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 // Components
@@ -70,7 +71,7 @@ export default function SignIn() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="sm">
         <CssBaseline />
         <Box
           sx={{
@@ -80,10 +81,18 @@ export default function SignIn() {
             alignItems: 'center',
           }}
         >
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <Box sx={{marginBottom: '40px'}}>
+              <Typography component="h1" variant="h4" align='left' sx={{width: '100%', marginBottom: '8px'}}>
+                Sign in to SPM
+              </Typography>
+              <Typography variant="body2" align='left' sx={{width: '100%'}}>
+                Enter your details below.
+              </Typography>
+            </Box>
+
+            <Alert severity="info">Use email : <b>demo@SPM.com</b> / password : <b>demo1234</b></Alert>
+
             <TextField
               margin="normal"
               required
