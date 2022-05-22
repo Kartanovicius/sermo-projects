@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword, 
   signOut, 
   onAuthStateChanged, 
-  User 
+  User
 } from "firebase/auth";
 
 const AuthContext = createContext<any|null>(null);
@@ -27,8 +27,7 @@ export default function AuthProvider({children}: any) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log(user)
-      setCurrentUser(user)
+      setCurrentUser(user);
     })
   
     return () => {
