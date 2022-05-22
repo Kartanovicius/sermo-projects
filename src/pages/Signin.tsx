@@ -64,6 +64,9 @@ export default function SignIn() {
         if(e.message.includes("auth/wrong-password")){
           setPasswordErrorStatus({'status': true, 'message': "You have entered an invalid password"})
         }
+        if(e.message.includes("auth/too-many-requests")){
+          setPasswordErrorStatus({'status': true, 'message': "Access to this account has been temporarily disabled due to many failed login attempts."})
+        }
       }
     }
     
