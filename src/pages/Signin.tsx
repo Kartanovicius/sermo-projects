@@ -16,10 +16,8 @@ import {
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 // Components
 import Copyright from '../components/Copyright'
-import FormAlert from '../components/FormAlert';
 
 const theme = createTheme();
-let alreadyCalled = 0;
 
 interface alertInterface {
   status: boolean
@@ -30,10 +28,9 @@ export default function SignIn() {
   const emailRef = useRef<HTMLInputElement>();
   const passwordRef = useRef<HTMLInputElement>();
 
-  const [emailErrorStatus, setEmailErrorStatus] = useState<boolean>(false)
-  const [passwordErrorStatus, setPasswordErrorStatus] = useState<boolean>(false)
+  const [emailErrorStatus, setEmailErrorStatus] = useState<alertInterface>({'status': false, 'message': ''})
+  const [passwordErrorStatus, setPasswordErrorStatus] = useState<alertInterface>({'status': false, 'message': ''})
 
-  const [alert, setAlert] = useState<alertInterface>({'status': false, 'message': ''})
 
   const { signInUser } = useAuth();
   const navigate = useNavigate();
@@ -50,37 +47,23 @@ export default function SignIn() {
       console.log(e)
       if (e instanceof FirebaseError) {
         if(e.message.includes("internal-error")){
-          setAlert({'status': true, 'message': 'Sign in form is incompleted'})
           if (emailVal === '' || emailVal === undefined) {
-            setEmailErrorStatus(true)
+            setEmailErrorStatus({'status': true, 'message': 'Sign in form is incompleted'})
           }
           if (passwordVal === '' || passwordVal === undefined) {
-            setPasswordErrorStatus(true)
+            setPasswordErrorStatus({'status': true, 'message': 'Sign in form is incompleted'})
           }
         }
         if(e.message.includes("auth/missing-email") || e.message.includes("auth/invalid-email")){
-          setAlert({'status': true, 'message': 'Please enter email adress'})
-          setEmailErrorStatus(true)
+          setEmailErrorStatus({'status': true, 'message': 'Please enter email adress'})
         }
         if(e.message.includes("auth/user-not-found")){
-          setAlert({'status': true, 'message': "This user does not exist"})
-          setEmailErrorStatus(true)
+          setEmailErrorStatus({'status': true, 'message': "This user does not exist"})
         }
         if(e.message.includes("auth/wrong-password")){
-          setAlert({'status': true, 'message': "You have entered an invalid password"})
-          setPasswordErrorStatus(true)
+          setPasswordErrorStatus({'status': true, 'message': "You have entered an invalid password"})
         }
       }
-      alreadyCalled++;
-    } finally {
-      if (alreadyCalled === 1) {
-        // Clear alert status and message
-        setTimeout(function() {
-          setAlert({'status': false, 'message': ''})
-          alreadyCalled = 0;
-        },5000)       
-      }
-      return;
     }
     
   };
@@ -89,9 +72,6 @@ export default function SignIn() {
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-
-        <FormAlert status={alert.status} message={alert.message}/>
-
         <Box
           sx={{
             marginTop: 8,
@@ -114,8 +94,9 @@ export default function SignIn() {
               autoComplete="email"
               autoFocus
               inputRef={emailRef}
-              error={emailErrorStatus}
-              onChange={ (event) => event.target.value !== '' ? setEmailErrorStatus(false) : undefined}
+              error={emailErrorStatus.status}
+              onChange={ (event) => event.target.value !== '' ? setEmailErrorStatus({'status': false, 'message': ''}) : undefined}
+              helperText={emailErrorStatus.message}
             />
             <TextField
               margin="normal"
@@ -127,14 +108,14 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
               inputRef={passwordRef}
-              error={passwordErrorStatus}
-              onChange={ (event) => event.target.value !== '' ? setPasswordErrorStatus(false) : undefined}
+              error={passwordErrorStatus.status}
+              onChange={ (event) => event.target.value !== '' ? setPasswordErrorStatus({'status': false, 'message': ''}) : undefined}
+              helperText={passwordErrorStatus.message}
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              disableElevation
               sx={{ mt: 3, mb: 2 }}
             >
               Sign In

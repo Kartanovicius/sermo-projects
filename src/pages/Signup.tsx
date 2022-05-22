@@ -9,19 +9,15 @@ import {
   Button,
   CssBaseline,
   TextField,
-  FormControlLabel,
-  Checkbox,
   Grid,
   Box,
   Container
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 //Components
-import FormAlert from '../components/FormAlert';
 import Copyright from '../components/Copyright'
 
 const theme = createTheme();
-let alreadyCalled = 0;
 
 interface alertInterface {
   status: boolean
@@ -30,20 +26,18 @@ interface alertInterface {
 
 
 export default function SignUp() {
-  const nameRef = useRef<HTMLInputElement>();
-  const surnameRef = useRef<HTMLInputElement>();
+  const firstnameRef = useRef<HTMLInputElement>();
+  const lastnameRef = useRef<HTMLInputElement>();
   const emailRef = useRef<HTMLInputElement>();
   const passwordRef = useRef<HTMLInputElement>();
   const passwordConfirmRef = useRef<HTMLInputElement>();
   const termsCheckboxRef = useRef<HTMLInputElement>();
 
-  const [nameErrorStatus, setNameErrorStatus] = useState<boolean>(false)
-  const [surnameErrorStatus, setSurnameErrorStatus] = useState<boolean>(false)
-  const [emailErrorStatus, setEmailErrorStatus] = useState<boolean>(false)
-  const [passwordErrorStatus, setPasswordErrorStatus] = useState<boolean>(false)
-  const [passwordConfirmErrorStatus, setPasswordConfirmErrorStatus] = useState<boolean>(false)
-
-  const [alert, setAlert] = useState<alertInterface>({'status': false, 'message': ''})
+  const [firstnameErrorStatus, setfirstnameErrorStatus] = useState<alertInterface>({'status': false, 'message': ''})
+  const [lastnameErrorStatus, setlastnameErrorStatus] = useState<alertInterface>({'status': false, 'message': ''})
+  const [emailErrorStatus, setEmailErrorStatus] = useState<alertInterface>({'status': false, 'message': ''})
+  const [passwordErrorStatus, setPasswordErrorStatus] = useState<alertInterface>({'status': false, 'message': ''})
+  const [passwordConfirmErrorStatus, setPasswordConfirmErrorStatus] = useState<alertInterface>({'status': false, 'message': ''})
 
   const { createUser } = useAuth()
 
@@ -51,47 +45,33 @@ export default function SignUp() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const nameVal: string | undefined = nameRef.current?.value;
-    const surnameVal: string | undefined = surnameRef.current?.value;
+    const nameVal: string | undefined = firstnameRef.current?.value;
+    const lastnameVal: string | undefined = lastnameRef.current?.value;
     const emailVal: string | undefined = emailRef.current?.value;
     const passwordVal: string | undefined = passwordRef.current?.value;
     const passwordConfirmVal: string | undefined = passwordConfirmRef.current?.value;
     const termsCheckboxVal: boolean | undefined = termsCheckboxRef.current?.checked;
 
-    let isValid: boolean = true;
-
     try {
       // Check if all inputs filled
       if (nameVal === '' || nameVal === undefined) {
-        setNameErrorStatus(true)
-        isValid = false
+        setfirstnameErrorStatus({'status': true, 'message': 'First name required'})
       }
-      if (surnameVal === '' || surnameVal === undefined) {
-        setSurnameErrorStatus(true)
-        isValid = false
+      if (lastnameVal === '' || lastnameVal === undefined) {
+        setlastnameErrorStatus({'status': true, 'message': 'Last name required'})
       }
       if (emailVal === '' || emailVal === undefined) {
-        setEmailErrorStatus(true)
-        isValid = false
+        setEmailErrorStatus({'status': true, 'message': 'Email required'})
       }
       if (passwordVal === '' || passwordVal === undefined) {
-        setPasswordErrorStatus(true)
-        isValid = false
+        setPasswordErrorStatus({'status': true, 'message': 'Password required'})
       }
       if (passwordConfirmVal === '' || passwordConfirmVal === undefined) {
-        setPasswordConfirmErrorStatus(true)
-        isValid = false
-      }
-      if (isValid === false) {
-        throw new Error('form-incomplete');
-      }
-
-      if (termsCheckboxVal === false || termsCheckboxVal === undefined) {
-        throw new Error('terms-checkbox-not-selected');
+        setPasswordConfirmErrorStatus({'status': true, 'message': 'Password confirm required'})
       }
 
       // Does passwords match
-      if (passwordVal !== passwordConfirmVal) {        
+      if (passwordVal !== passwordConfirmVal) {  
         throw new Error('Password-is-not-matching');
       }
 
@@ -102,50 +82,29 @@ export default function SignUp() {
     } catch (e) {
       if (e instanceof FirebaseError) {
         if(e.message.includes("auth/weak-password")){
-          setAlert({'status': true, 'message': 'Password should containt minimum 6 characters'})
-          setPasswordErrorStatus(true)
-          setPasswordConfirmErrorStatus(true)
+          setPasswordErrorStatus({'status': true, 'message': 'Password should containt minimum 6 characters'})
+          setPasswordConfirmErrorStatus({'status': true, 'message': 'Password should containt minimum 6 characters'})
         }
         if(e.message.includes("auth/email-already-in-use")){
-          setEmailErrorStatus(true)
-          setAlert({'status': true, 'message': 'This email is already in use'})
+          setEmailErrorStatus({'status': true, 'message': 'This email is already in use'})
         }
       }
       if (e instanceof Error) {
-        if (e.message === 'form-incomplete') {
-          setAlert({'status': true, 'message': 'Form is incomplete'})
-        }
         if (e.message === 'Password-is-not-matching') {
-          setAlert({'status': true, 'message': "Passwords doesn't match"})
-          setPasswordErrorStatus(true)
-          setPasswordConfirmErrorStatus(true)
-        }
-        if (e.message === 'terms-checkbox-not-selected') {
-          setAlert({'status': true, 'message': 'Please confirm terms and conditions'})
+          setPasswordConfirmErrorStatus({'status': true, 'message': "Passwords doesn't match"})
         }
       }
-      alreadyCalled++;
-    } finally {
-      if (alreadyCalled === 1) {
-        // Clear alert status and message
-        setTimeout(function() {
-          setAlert({'status': false, 'message': ''})
-          alreadyCalled = 0;
-        },5000)       
-      }
-      return;
     }
   };
 
   function passwordOnChangeHandler() {
     const passwordVal: string | undefined = passwordRef.current?.value;
     const passwordConfirmVal: string | undefined = passwordConfirmRef.current?.value;
-
     if (passwordVal !== '') {
-      setPasswordErrorStatus(false)
+      setPasswordErrorStatus({'status': false, 'message': ''})
     }
     if (passwordConfirmVal !== '') {
-      setPasswordConfirmErrorStatus(false)
+      setPasswordConfirmErrorStatus({'status': false, 'message': ''})
     }
   }
 
@@ -153,9 +112,6 @@ export default function SignUp() {
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-
-        <FormAlert status={alert.status} message={alert.message}/>
-
         <Box
           sx={{
             marginTop: 8,
@@ -178,9 +134,10 @@ export default function SignUp() {
                   id="firstName"
                   label="First Name"
                   autoFocus
-                  inputRef={nameRef}
-                  error={nameErrorStatus}
-                  onChange={ (event) => event.target.value !== '' ? setNameErrorStatus(false) : undefined}
+                  inputRef={firstnameRef}
+                  error={firstnameErrorStatus.status}
+                  onChange={ (event) => event.target.value !== '' ? setfirstnameErrorStatus({'status': false, 'message': ''}) : undefined}
+                  helperText={firstnameErrorStatus.message}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -191,9 +148,10 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="surname-name"
-                  inputRef={surnameRef}
-                  error={surnameErrorStatus}
-                  onChange={ (event) => event.target.value !== '' ? setSurnameErrorStatus(false) : undefined}
+                  inputRef={lastnameRef}
+                  error={lastnameErrorStatus.status}
+                  onChange={ (event) => event.target.value !== '' ? setlastnameErrorStatus({'status': false, 'message': ''}) : undefined}
+                  helperText={lastnameErrorStatus.message}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -205,8 +163,9 @@ export default function SignUp() {
                   name="email"
                   autoComplete="email"
                   inputRef={emailRef}
-                  error={emailErrorStatus}
-                  onChange={ (event) => event.target.value !== '' ? setEmailErrorStatus(false) : undefined}
+                  error={emailErrorStatus.status}
+                  onChange={ (event) => event.target.value !== '' ? setEmailErrorStatus({'status': false, 'message': ''}) : undefined}
+                  helperText={emailErrorStatus.message}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -219,8 +178,9 @@ export default function SignUp() {
                   id="password"
                   autoComplete="new-password"
                   inputRef={passwordRef}
-                  error={passwordErrorStatus}
+                  error={passwordErrorStatus.status}
                   onChange={passwordOnChangeHandler}
+                  helperText={passwordErrorStatus.message}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -233,15 +193,9 @@ export default function SignUp() {
                   id="confirm-password"
                   autoComplete="confirm-password"
                   inputRef={passwordConfirmRef}
-                  error={passwordConfirmErrorStatus}
+                  error={passwordConfirmErrorStatus.status}
                   onChange={passwordOnChangeHandler}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox color="primary" />}
-                  label="I agree with terms and conditions"
-                  inputRef={termsCheckboxRef}
+                  helperText={passwordConfirmErrorStatus.message}
                 />
               </Grid>
             </Grid>
@@ -249,7 +203,6 @@ export default function SignUp() {
               type="submit"
               fullWidth
               variant="contained"
-              disableElevation
               sx={{ mt: 3, mb: 2 }}
             >
               Sign Up
