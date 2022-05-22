@@ -1,23 +1,26 @@
-import React from 'react';
-import { getApps } from 'firebase/app';
-import Signup from './pages/Signup';
+import React, { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Signin from './pages/Signin';
-import Home from './pages/Home';
 import AuthProvider from './context/authContext'
-import HTTP404 from './pages/HTTP404';
+import * as ROUTES from './constants/routes'
+
+const Signin = lazy(() => import('./pages/Signin'))
+const Signup = lazy(() => import('./pages/Signup'))
+const Main = lazy(() => import('./pages/Main'))
+const NotFound = lazy(() => import('./pages/NotFound'))
 
 function App() {
 
   return (
     <div className="App">
       <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Signin />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/*" element={<HTTP404 />} />
-        </Routes>
+        <Suspense>
+          <Routes>
+            <Route path={ROUTES.SIGN_IN} element={<Signin />} />
+            <Route path={ROUTES.SIGN_UP} element={<Signup />} />
+            <Route path={ROUTES.MAIN} element={<Main />}/>
+            <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </AuthProvider>
     </div>
   );
