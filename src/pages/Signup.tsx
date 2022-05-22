@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext'
 import { FirebaseError } from 'firebase/app';
+import * as ROUTES from '../constants/routes'
 //Material UI
 import { 
   Typography,
@@ -97,7 +98,7 @@ export default function SignUp() {
       // Firebase auth
       await createUser(emailRef.current?.value, passwordRef.current?.value)
       
-      navigate('/home')
+      navigate(ROUTES.MAIN)
     } catch (e) {
       if (e instanceof FirebaseError) {
         if(e.message.includes("auth/weak-password")){
@@ -255,7 +256,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link to="/">
+                <Link to={ROUTES.SIGN_IN}>
                   <Typography variant="body2" color='primary'>
                     Already have an account? Sign in
                   </Typography>

@@ -2,14 +2,13 @@ import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
 import { FirebaseError } from 'firebase/app';
+import * as ROUTES from '../constants/routes'
 // Material UI
 import { 
   Typography,
   Button,
   CssBaseline,
   TextField,
-  FormControlLabel,
-  Checkbox,
   Grid,
   Box,
   Container
@@ -46,7 +45,7 @@ export default function SignIn() {
 
     try {
       await signInUser(emailVal, passwordVal)
-      navigate('/home')
+      navigate(ROUTES.MAIN)
     } catch (e) {
       console.log(e)
       if (e instanceof FirebaseError) {
@@ -142,7 +141,7 @@ export default function SignIn() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link to="/signup">
+                <Link to={ROUTES.SIGN_UP}>
                   <Typography variant="body2" color='primary'>
                     Don't have an account? Sign Up
                   </Typography>
