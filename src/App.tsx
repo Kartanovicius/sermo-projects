@@ -6,7 +6,7 @@ import ProtectedRoute, { ProtectedRouteProps } from './helpers/protected-route';
 
 const Signin = lazy(() => import('./pages/Signin'))
 const Signup = lazy(() => import('./pages/Signup'))
-const Main = lazy(() => import('./pages/Main'))
+const Main = lazy(() => import('./pages/Dashboard'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 function App() {
