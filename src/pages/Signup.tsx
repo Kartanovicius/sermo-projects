@@ -1,8 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import * as ROUTES from '../constants/routes'
+//Firebase
+import { db } from '../lib/firebase';
+import { addDoc, collection } from 'firebase/firestore';
 import { useAuth } from '../context/authContext'
 import { FirebaseError } from 'firebase/app';
-import * as ROUTES from '../constants/routes'
 //Material UI
 import { 
   Typography,
@@ -74,7 +77,16 @@ export default function SignUp() {
       }
 
       // Firebase auth
-      await createUser(emailRef.current?.value, passwordRef.current?.value)
+      const createdUserResult = await createUser(emailRef.current?.value, passwordRef.current?.value)
+
+      await addDoc(collection(db, "users"), {
+        uid: createdUserResult.user.uid,
+        first: nameVal,
+        last: lastnameVal,
+        emailAddress: emailVal,
+        projects: [],
+        dateCreated: Date.now(),
+      });
       
       navigate(ROUTES.MAIN)
     } catch (e) {
