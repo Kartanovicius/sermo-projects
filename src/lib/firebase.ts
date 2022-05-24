@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-const config = {
+const firebaseConfig = {
   apiKey: "AIzaSyAqmqyU1t21_0002MlSOR8yKTXS1uxr2A8",
   authDomain: "sermo-projects.firebaseapp.com",
   projectId: "sermo-projects",
@@ -12,8 +12,8 @@ const config = {
   measurementId: "G-MF9KNT4H1E"
 };
 
-const firebase = initializeApp(config);
+const firebase = initializeApp(firebaseConfig);
 const auth = getAuth(firebase);
-const fieldValue = getFirestore();
+const db = getFirestore(firebase);
 
-export { auth, firebase, fieldValue };
+export { auth, firebase, db };
