@@ -16,7 +16,7 @@ import Paper from '@mui/material/Paper';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems } from '../components/dashboard/listitems';
+import { MainListItems } from '../components/dashboard/listitems';
 import Copyright from '../components/Copyright';
 
 
@@ -131,7 +131,7 @@ function DashboardContent() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
+            <MainListItems/>
           </List>
         </Drawer>
         <Box
