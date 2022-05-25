@@ -4,12 +4,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LogoutIcon from '@mui/icons-material/Logout';
-import { useAuth } from '../../context/authContext';
 
-export const MainListItems = () => {
-  const { signOutUser } = useAuth();
-  
+export const MainListItems = () => {  
   return (
     <React.Fragment>
     <ListItemButton>
@@ -23,12 +19,6 @@ export const MainListItems = () => {
         <AccountCircleIcon />
       </ListItemIcon>
       <ListItemText primary="Profile" />
-    </ListItemButton>
-    <ListItemButton onClick={signOutUser}>
-      <ListItemIcon>
-        <LogoutIcon />
-      </ListItemIcon>
-      <ListItemText primary="Logout"/>
     </ListItemButton>
   </React.Fragment>
   )
