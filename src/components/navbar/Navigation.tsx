@@ -12,6 +12,8 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { MainListItems } from './listitems';
 import { AvatarMenuItems } from './AvatarMenuItems';
 import { Avatar, Menu } from '@mui/material';
+import { useAuth } from '../../context/authContext';
+import useUser from '../../hooks/use-user';
 
 const drawerWidth: number = 240;
 
@@ -64,6 +66,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function Navigation() {
+  const { currentUser } = useAuth()
+  const {user} = useUser(currentUser.uid)
+
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -153,7 +158,7 @@ export default function Navigation() {
         }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-      ><AvatarMenuItems /></Menu>
+      >{user && <AvatarMenuItems firstName={user?.first}/>}</Menu>
       <Drawer variant="permanent" open={open}>
         <Toolbar
           sx={{

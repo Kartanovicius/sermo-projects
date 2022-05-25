@@ -3,14 +3,16 @@ import { Logout } from '@mui/icons-material'
 import { MenuItem, Avatar, Divider, ListItemIcon } from '@mui/material'
 import { useAuth } from '../../context/authContext';
 
-export const AvatarMenuItems = () => {
-  const { signOutUser } = useAuth();
 
+
+export const AvatarMenuItems = (firstName: any) => {
+  const { signOutUser } = useAuth();
+  const firstNameVal = firstName.firstName
 
   return (
     <React.Fragment>
     <MenuItem>
-      <Avatar /> Profile
+      <Avatar /> <>{firstNameVal}</>
     </MenuItem>
     <Divider />
     <MenuItem onClick={signOutUser}>
