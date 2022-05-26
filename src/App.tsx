@@ -3,11 +3,12 @@ import { Route, Routes } from 'react-router-dom';
 import { useAuth } from './context/authContext'
 import * as ROUTES from './constants/routes'
 import ProtectedRoute, { ProtectedRouteProps } from './helpers/protected-route';
+import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 
 const Signin = lazy(() => import('./pages/Signin'))
 const Signup = lazy(() => import('./pages/Signup'))
-const Main = lazy(() => import('./pages/Dashboard'))
+const Main = lazy(() => import('./pages/Main'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 function App() {
@@ -29,13 +30,10 @@ function App() {
               {...defaultProtectedRouteProps}
               outlet={<Main />}
             />
-          }/>
-          <Route path={ROUTES.PROFILE+':userid'} element={
-            <ProtectedRoute
-              {...defaultProtectedRouteProps}
-              outlet={<Profile />}
-            />
-          }/>
+          }>
+            <Route path={ROUTES.MAIN} element={<Dashboard />}/>
+            <Route path={ROUTES.PROFILE+':userid'} element={<Profile />}/>
+          </Route>
           <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
         </Routes>
       </Suspense>}

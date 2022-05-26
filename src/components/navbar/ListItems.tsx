@@ -11,16 +11,16 @@ import * as ROUTES from '../../constants/routes'
 export const ListItems = () => {  
   const navigate = useNavigate();
   const {currentUser} = useAuth();
-  navigate(ROUTES.PROFILE + currentUser.uid)
+
   return (
     <React.Fragment>
-      <ListItemButton >
-        <ListItemIcon>
+      <ListItemButton onClick={e => navigate(ROUTES.MAIN)}>
+        <ListItemIcon >
           <DashboardIcon />
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItemButton>
-      <ListItemButton>
+      <ListItemButton onClick={(e) => navigate(ROUTES.PROFILE + currentUser.uid)}>
         <ListItemIcon>
           <AccountCircleIcon />
         </ListItemIcon>
