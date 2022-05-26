@@ -1,8 +1,9 @@
+import { DocumentData } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 import { getUserByUserId } from '../services/firebase';
 
 export default function useUser(uid: string) {
-  const [activeUser, setActiveUser] = useState<any>();
+  const [activeUser, setActiveUser] = useState<DocumentData | undefined>();
 
   useEffect(() => {
     async function getUserObjByUserId(uid: string) {
