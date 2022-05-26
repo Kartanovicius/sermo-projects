@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { useAuth } from './context/authContext'
 import * as ROUTES from './constants/routes'
 import ProtectedRoute, { ProtectedRouteProps } from './helpers/protected-route';
+import Profile from './pages/Profile';
 
 const Signin = lazy(() => import('./pages/Signin'))
 const Signup = lazy(() => import('./pages/Signup'))
@@ -27,6 +28,12 @@ function App() {
             <ProtectedRoute
               {...defaultProtectedRouteProps}
               outlet={<Main />}
+            />
+          }/>
+          <Route path={ROUTES.PROFILE+':userid'} element={
+            <ProtectedRoute
+              {...defaultProtectedRouteProps}
+              outlet={<Profile />}
             />
           }/>
           <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
