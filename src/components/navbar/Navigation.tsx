@@ -69,7 +69,7 @@ export default function Navigation() {
   const { currentUser } = useAuth()
   const {user} = useUser(currentUser.uid)
 
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(window.innerWidth < 769 ? false : true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
