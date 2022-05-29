@@ -9,7 +9,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { MainListItems } from './listitems';
+import { ListItems } from './ListItems';
 import { AvatarMenuItems } from './AvatarMenuItems';
 import { Avatar, Menu } from '@mui/material';
 import { useAuth } from '../../context/authContext';
@@ -174,7 +174,7 @@ export default function Navigation() {
         </Toolbar>
         <Divider />
         <List component="nav">
-          <MainListItems />
+          <ListItems />
         </List>
       </Drawer>
     </React.Fragment>
