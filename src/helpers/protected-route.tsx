@@ -1,8 +1,7 @@
-import { User } from "firebase/auth";
 import { Navigate } from "react-router-dom";
 
 export type ProtectedRouteProps = {
-  isAuthenticated: User;
+  isAuthenticated: boolean;
   authenticationPath: string;
   outlet: JSX.Element;
 };

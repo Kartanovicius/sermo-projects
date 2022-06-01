@@ -23,8 +23,20 @@ function App() {
       {currentUser !== undefined && 
       <Suspense>
         <Routes>
-          <Route path={ROUTES.SIGN_IN} element={<Signin />} />
-          <Route path={ROUTES.SIGN_UP} element={<Signup />} />
+          <Route path={ROUTES.SIGN_IN} element={
+            <ProtectedRoute
+            isAuthenticated={!currentUser}
+            authenticationPath={ROUTES.MAIN}
+            outlet={<Signin />}
+            />
+          } />
+          <Route path={ROUTES.SIGN_UP} element={
+            <ProtectedRoute
+            isAuthenticated={!currentUser}
+            authenticationPath={ROUTES.MAIN}
+            outlet={<Signup />}
+            />
+          } />
           <Route path={ROUTES.MAIN} element={
             <ProtectedRoute
               {...defaultProtectedRouteProps}
