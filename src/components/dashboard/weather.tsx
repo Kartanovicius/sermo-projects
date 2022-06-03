@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
-import Container from '@mui/material/Container';
+import { useEffect, useRef, useState } from 'react';
 import { styled } from '@mui/material/styles';
+import ReactLoading from 'react-loading';
+import { TextField, Grid, Paper, Button } from '@mui/material';
+import { FormatAlignJustify } from '@mui/icons-material';
 
 interface IData {
   current: {
@@ -23,31 +23,83 @@ interface IData {
 function WeatherContent() {
   const [data, setData] = useState<IData | null>();
   const [error, setError] = useState<string | null>();
-  const [loading, setLoading] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(true);
+  const [manualSelect, setManualSelect] = useState<boolean>(false);
+  const cityRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
-    fetch('https://api.weatherapi.com/v1/current.json?key='+process.env.REACT_APP_WEATHER_API_KEY+'&q=Vilnius&aqi=no')
-    .then((response) => response.json())
+    let url = '';
+    navigator.geolocation.getCurrentPosition(async function (position) {
+      url = `https://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API_KEY}&q=${position.coords.latitude},${position.coords.longitude}&aqi=no`;
+      fetch(url)
+      .then((response) => response.json())
+      .then((actualData) => {
+        setData(actualData);
+        setError(null);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setData(null);
+      })
+      .finally(() => {
+        setLoading(false);
+        setManualSelect(false);
+      });
+    },
+    function(error) {
+      if (error.code === error.PERMISSION_DENIED) {
+        setLoading(false);
+        setManualSelect(true);
+      }
+    });
+  }, [])
+
+  function confirmEventHandler() {
+    const city = cityRef.current?.value
+    let url = `https://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API_KEY}&q=${city}&aqi=no`;
+    fetch(url)
+    .then((response) => 
+      {if (response.status >= 200 && response.status <= 299) {
+        return response.json();
+      } else {
+        return response.json().then((e) => {throw Error(e.error.code)});
+      }}
+    )
     .then((actualData) => {
       setData(actualData);
       setError(null);
+      setManualSelect(false);
     })
-    .catch((err) => {
-      setError(err.message);
-      setData(null);
+    .catch((e) => {
+      if (e.toString().includes('1003')) {
+        setError('City must have a value');
+      }  
+      if (e.toString().includes('1006')) {
+        setError('No matching location found');
+      }
     })
     .finally(() => {
       setLoading(false);
     });
-  }, [])
+  }
 
   const Item = styled(Paper)(({ theme }) => ({
     textAlign: 'center',
     boxShadow: 'none',
-    fontSize: 13,
-    [theme.breakpoints.down('md')]: {
-      fontSize: 11,
+    fontSize: 11,
+    [theme.breakpoints.up('md')]: {
+      fontSize: 12,
     },
+    [theme.breakpoints.up('lg')]: {
+      fontSize: 13,
+    },
+  }));
+
+  const LoaderContainer = styled(Paper)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'center',
+    boxShadow: 'none',
   }));
 
   const Link = styled(Paper)(({ theme }) => ({
@@ -64,11 +116,26 @@ function WeatherContent() {
         flexDirection: 'column',
       }}
     >
-      {loading && <p>...Loading</p>}
-      {error && <p>{`There is a problem fetching the post data - ${error}`}</p>}
+      {loading && <LoaderContainer><ReactLoading type='spinningBubbles' color='#1875d2' height={'25%'} width={'25%'}/></LoaderContainer>}
+      <Link><a href="https://www.weatherapi.com/" title="Weather API" >WeatherAPI.com</a></Link>
+      {error && <p>{`${error}`}</p>}
+      {manualSelect && 
+      <div>
+        <TextField fullWidth 
+          id="city" 
+          label="City"
+          variant="outlined" 
+          type="text"
+          sx={{marginBottom: '16px'}}
+          inputRef={cityRef}
+         />
+        <Button fullWidth variant="contained" disableElevation onClick={confirmEventHandler}>
+          Confirm
+        </Button>
+      </div>
+      }
       {data && 
       <div>
-        <Link><a href="https://www.weatherapi.com/" title="Weather API" >WeatherAPI.com</a></Link>
         <Item>
           <img src={data.current.condition.icon} alt="Weather status img" />
         </Item>
