@@ -26,7 +26,7 @@ function WeatherContent() {
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
-    fetch('http://api.weatherapi.com/v1/current.json?key=7e5f31b0cc614140aeb121648220306&q=Vilnius&aqi=no')
+    fetch('https://api.weatherapi.com/v1/current.json?key=7e5f31b0cc614140aeb121648220306&q=Vilnius&aqi=no')
     .then((response) => response.json())
     .then((actualData) => {
       setData(actualData);
