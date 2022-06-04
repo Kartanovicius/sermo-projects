@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import ReactLoading from 'react-loading';
-import { TextField, Grid, Paper, Button } from '@mui/material';
+import { TextField, Grid, Paper, Button, Alert } from '@mui/material';
 import { FormatAlignJustify } from '@mui/icons-material';
 
 interface IData {
@@ -100,6 +100,7 @@ function WeatherContent() {
     justifyContent: 'center',
     alignContent: 'center',
     boxShadow: 'none',
+    padding: '16px 0'
   }));
 
   const Link = styled(Paper)(({ theme }) => ({
@@ -116,9 +117,9 @@ function WeatherContent() {
         flexDirection: 'column',
       }}
     >
-      {loading && <LoaderContainer><ReactLoading type='spinningBubbles' color='#1875d2' height={'25%'} width={'25%'}/></LoaderContainer>}
+      {loading && <LoaderContainer><ReactLoading type='spinningBubbles' color='#1875d2' height={'15%'} width={'15%'}/></LoaderContainer>}
       <Link><a href="https://www.weatherapi.com/" title="Weather API" >WeatherAPI.com</a></Link>
-      {error && <p>{`${error}`}</p>}
+      {error && <Alert severity="error" sx={{margin: '16px 0'}}>{`${error}`}</Alert>}
       {manualSelect && 
       <div>
         <TextField fullWidth 
