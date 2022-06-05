@@ -1,26 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { styled } from '@mui/material/styles';
 import ReactLoading from 'react-loading';
 import { TextField, Grid, Paper, Button, Alert, Typography } from '@mui/material';
+import { useWeather } from '../../context/weatherContext';
 
-interface IData {
-  current: {
-    temp_c: number,
-    wind_kph: number,
-    humidity: number,
-    precip_mm: number,
-    is_day: number,
-    condition: {
-      code: number,
-    }
-  },
-  location: {
-    name: string,
-    region: string,
-  }
-}
-
-const Item = styled(Paper)(({ theme }) => ({
+const Item = styled(Paper)(() => ({
   textAlign: 'center',
   boxShadow: 'none',
   fontSize: 11,
@@ -41,39 +25,19 @@ const Link = styled(Paper)(() => ({
 }));
 
 function WeatherContent() {
-  const [data, setData] = useState<IData | null>();
-  const [error, setError] = useState<string | null>();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [manualSelect, setManualSelect] = useState<boolean>(false);
-  const cityRef = useRef<HTMLInputElement | null>(null)
 
-  useEffect(() => {
-    let url = '';
-    navigator.geolocation.getCurrentPosition(async function (position) {
-      url = `https://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API_KEY}&q=${position.coords.latitude},${position.coords.longitude}&aqi=no`;
-      fetch(url)
-      .then((response) => response.json())
-      .then((actualData) => {
-        console.log(actualData)
-        setData(actualData);
-        setError(null);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setData(null);
-      })
-      .finally(() => {
-        setLoading(false);
-        setManualSelect(false);
-      });
-    },
-    function(error) {
-      if (error.code === error.PERMISSION_DENIED) {
-        setLoading(false);
-        setManualSelect(true);
-      }
-    });
-  }, [])
+  const cityRef = useRef<HTMLInputElement | null>(null)
+  const { 
+    data,
+    setData,
+    error,
+    setError,
+    loading,
+    setLoading,
+    manualSelect,
+    setManualSelect
+   } = useWeather()
+
 
   function confirmEventHandler() {
     const city = cityRef.current?.value
@@ -103,7 +67,7 @@ function WeatherContent() {
       setLoading(false);
     });
   }
-  
+
   return (
     <Paper
       sx={{
@@ -112,76 +76,80 @@ function WeatherContent() {
         flexDirection: 'column',
       }}
     >
-      {loading && <LoaderContainer><ReactLoading type='spinningBubbles' color='#1875d2' height={'15%'} width={'15%'}/></LoaderContainer>}
+      {loading && 
+        <LoaderContainer>
+        <ReactLoading type='spinningBubbles' color='#1875d2' height={'15%'} width={'15%'}/>
+        </LoaderContainer>
+      }
       <Link><a href="https://www.weatherapi.com/" title="Weather API" >WeatherAPI.com</a></Link>
       {error && <Alert severity="error" sx={{margin: '16px 0'}}>{`${error}`}</Alert>}
       {manualSelect && 
-      <div>
-        <TextField fullWidth 
-          id="city" 
-          label="City"
-          variant="outlined" 
-          type="text"
-          sx={{marginBottom: '16px'}}
-          inputRef={cityRef}
-         />
-        <Button fullWidth variant="contained" disableElevation onClick={confirmEventHandler}>
-          Confirm
-        </Button>
-      </div>
+        <>
+          <TextField fullWidth 
+            id="city" 
+            label="City"
+            variant="outlined" 
+            type="text"
+            sx={{marginBottom: '16px'}}
+            inputRef={cityRef}
+           />
+          <Button fullWidth variant="contained" disableElevation onClick={confirmEventHandler}>
+            Confirm
+          </Button>
+        </>
       }
       {data && 
-      <div>
-        <Item>
-          <img 
-            src={`${process.env.PUBLIC_URL}icons/weather/${data.current.condition.code}${data.current.is_day === 1 ? "_day" : "_night" }.svg`} 
-            alt="Weather status img" 
-            style={{ height: 80, width: 80, margin: "16px 0" }}
-          />
-        </Item>
-        <Item>
-          <Typography variant='h4'>
-            {data.current.temp_c}&#176;
-          </Typography>
-        </Item>
-        <Item>
-          <Typography variant='body1'>
-            {data.location.name}, {data.location.region}
-          </Typography>
-        </Item>
-        <Grid container spacing={1} columns={{ xs: 12}} sx={{marginTop: "8px"}}>
-          <Grid item xs={4}>
-            <Item>
-              <Typography variant='body1'>
-                Wind now
-              </Typography>
-              <Typography variant='body2'>
-                {data.current.wind_kph}km/h
-              </Typography>
-            </Item>
+        <>
+          <Item>
+            <img 
+              src={`${process.env.PUBLIC_URL}icons/weather/${data.current.condition.code}${data.current.is_day === 1 ? "_day" : "_night" }.svg`} 
+              alt="Weather status img" 
+              style={{ height: 80, width: 80, margin: "16px 0", userSelect: 'none' }}
+            />
+          </Item>
+          <Item>
+            <Typography variant='h4'>
+              {data.current.temp_c}&#176;
+            </Typography>
+          </Item>
+          <Item>
+            <Typography variant='body1'>
+              {data.location.name}, {data.location.region}
+            </Typography>
+          </Item>
+          <Grid container spacing={1} columns={{ xs: 12}} sx={{marginTop: "8px"}}>
+            <Grid item xs={4}>
+              <Item>
+                <Typography variant='body2'>
+                  Wind now
+                </Typography>
+                <Typography variant='body1'>
+                  {data.current.wind_kph}km/h
+                </Typography>
+              </Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Item>
+                <Typography variant='body2'>
+                  Humidity
+                </Typography>
+                <Typography variant='body1'>
+                  {data.current.humidity}%  
+                </Typography>       
+              </Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Item>
+                <Typography variant='body2'>
+                  Precipitation
+                </Typography>
+                <Typography variant='body1'>
+                  {data.current.precip_mm}mm
+                </Typography>
+              </Item>
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <Item>
-              <Typography variant='body1'>
-                Humidity
-              </Typography>
-              <Typography variant='body2'>
-                {data.current.humidity}%  
-              </Typography>       
-            </Item>
-          </Grid>
-          <Grid item xs={4}>
-            <Item>
-              <Typography variant='body1'>
-                Precipitation
-              </Typography>
-              <Typography variant='body2'>
-                {data.current.precip_mm}mm
-              </Typography>
-            </Item>
-          </Grid>
-        </Grid>
-      </div>
+        </>
       }
     </Paper>
   );
