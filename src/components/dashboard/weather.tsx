@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import ReactLoading from 'react-loading';
 import { TextField, Grid, Paper, Button, Alert } from '@mui/material';
-import { FormatAlignJustify } from '@mui/icons-material';
 
 interface IData {
   current: {
