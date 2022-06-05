@@ -1,38 +1,40 @@
 import * as React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Navigation from '../components/navbar/Navigation';
 import { Outlet } from 'react-router-dom';
-
-const mdTheme = createTheme();
+import mdTheme from '../styles/MdTheme';
+import WeatherProvider from '../context/weatherContext';
 
 export default function Main() {
 
   return (
-    <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <Navigation />
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: '100vh',
-            overflow: 'auto',
-          }}
-        >
-          <Toolbar />
+    <WeatherProvider>
+      <ThemeProvider theme={mdTheme}>
+        <Box sx={{ display: 'flex' }}>
+          <CssBaseline />
+          <Navigation />
+          <Box
+            component="main"
+            sx={{
+              backgroundColor: (theme) =>
+                theme.palette.mode === 'light'
+                  ? 'background.default'
+                  : 'background.default',
+              flexGrow: 1,
+              height: '100vh',
+              overflow: 'auto',
+            }}
+          >          
+            <Toolbar />
 
-          <Outlet />
+            <Outlet />
 
+          </Box>
         </Box>
-      </Box>
-    </ThemeProvider>
+      </ThemeProvider>
+    </WeatherProvider>
   );
 }

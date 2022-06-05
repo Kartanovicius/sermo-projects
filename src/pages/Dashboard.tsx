@@ -1,32 +1,33 @@
 import React from 'react';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Copyright from '../components/Copyright';
-import Weather from '../components/dashboard/weather';
+//mui
+import { Grid, Container, Typography } from '@mui/material';
+//components
+import Projects from '../components/dashboard/Projects';
+import Weather from '../components/dashboard/Weather';
+import useUser from '../hooks/use-user';
+import { useAuth } from '../context/authContext';
 
 function DashboardContent() {
-
+  const { currentUser } = useAuth()
+  const { user } = useUser(currentUser.uid)
+  const email: string = user?.emailAddress
+  
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Typography variant='h4' fontWeight={ 'bold' }>
+        Hello there, {email}
+      </Typography>
+      <Typography variant='subtitle1' sx={{ mb: 5}}>
+        What's new
+      </Typography>
       <Grid container spacing={3}>
-        {/* Chart */}
         <Grid item xs={12} md={7} lg={8}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            Projects
-          </Paper>
+          <Projects />
         </Grid>
         <Grid item xs={12} md={5} lg={4}>
           <Weather/>
         </Grid>
       </Grid>
-      <Copyright sx={{ pt: 4 }} />
     </Container>
   );
 }

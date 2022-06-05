@@ -1,9 +1,6 @@
 import * as React from 'react'
 import { useParams } from 'react-router-dom';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Copyright from '../components/Copyright';
+import { Paper, Grid, Container } from '@mui/material';
 
 
 function ProfileContent() {
@@ -12,8 +9,7 @@ function ProfileContent() {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Grid container spacing={3}>
-        {/* Chart */}
-        <Grid item xs={12} md={8} lg={9}>
+        <Grid item xs={12}>
           <Paper
             sx={{
               p: 2,
@@ -21,11 +17,10 @@ function ProfileContent() {
               flexDirection: 'column',
             }}
           >
-                <div>{params.userid}</div>
+            <div>{params.userid}</div>
           </Paper>
         </Grid>
       </Grid>
-      <Copyright sx={{ pt: 4 }} />
     </Container>
   );
 }
