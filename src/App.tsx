@@ -4,7 +4,7 @@ import { useAuth } from './context/authContext'
 import * as ROUTES from './constants/routes'
 import ProtectedRoute, { ProtectedRouteProps } from './helpers/protected-route';
 import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
+import Profile from './pages/AccountSettings';
 
 const Signin = lazy(() => import('./pages/Signin'))
 const Signup = lazy(() => import('./pages/Signup'))
@@ -44,7 +44,7 @@ function App() {
             />
           }>
             <Route path={ROUTES.MAIN} element={<Dashboard />}/>
-            <Route path={ROUTES.PROFILE+':userid'} element={<Profile />}/>
+            <Route path={ROUTES.ACCOUNTSETTINGS+':userid'} element={<Profile />}/>
           </Route>
           <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
         </Routes>

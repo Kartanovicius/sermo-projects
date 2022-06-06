@@ -2,4 +2,4 @@ export const MAIN = '/';
 export const SIGN_IN = '/sign-in';
 export const SIGN_UP = '/sign-up';
 export const NOT_FOUND = '/*';
-export const PROFILE = '/profile/'
+export const ACCOUNTSETTINGS = '/account-settings/'

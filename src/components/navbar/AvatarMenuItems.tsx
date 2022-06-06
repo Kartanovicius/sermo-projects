@@ -61,7 +61,7 @@ export const AvatarMenuItems = (props: any) => {
 
   return (
     <React.Fragment>
-      <MenuItem onClick={(e) => {handleClose(); navigate(ROUTES.PROFILE+currentUser.uid);}} sx={{color: "primary.main"}}>
+      <MenuItem onClick={(e) => {handleClose(); navigate(ROUTES.ACCOUNTSETTINGS+currentUser.uid);}} sx={{color: "primary.main"}}>
         Account settings
       </MenuItem>
       <MenuItem onClick={signOutUser}>
