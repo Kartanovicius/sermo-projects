@@ -2,7 +2,7 @@ import * as React from 'react';
 //Mui
 import { styled } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
-import { Toolbar } from '@mui/material';
+import { Box, Hidden, Toolbar } from '@mui/material';
 //Icons
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -23,21 +23,24 @@ const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+  [theme.breakpoints.up('sm')]: {
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
+      duration: theme.transitions.duration.leavingScreen,
     }),
-  }),
+    ...(open && {
+      marginLeft: drawerWidth,
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    }),
+  }
+
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+const DrawerDesktop = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     '& .MuiDrawer-paper': {
       position: 'relative',
@@ -63,11 +66,27 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
+const DrawerMobile = styled(MuiDrawer)(
+  ({ theme }) => ({
+    zIndex: theme.zIndex.drawer + 2,
+    '& .MuiDrawer-paper': {
+      backgroundColor: theme.palette.background.default,
+      borderTopRightRadius: 16,
+      borderBottomRightRadius: 16,
+      paddingTop: 32,
+      paddingRight: 32,
+    }
+  }),
+);
+
 export default function Navigation() {
 
   const [open, setOpen] = React.useState(window.innerWidth < 769 ? false : true);
   const toggleDrawer = () => {
     setOpen(!open);
+    if (open) {
+      document.body.style.overflow = "hidden"
+    }
   };
 
   return (
@@ -95,25 +114,46 @@ export default function Navigation() {
 
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open} 
-        sx={{ "& .MuiDrawer-paper": { borderWidth: 0 } }}
-        PaperProps={{ sx: { backgroundColor: "background.default" }}}
-      >
-        <Toolbar
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            px: [1],
-            bgcolor: "background.default",
-          }}
+      <Hidden smDown>
+        <DrawerDesktop variant="permanent" open={open} 
+          sx={{ "& .MuiDrawer-paper": { borderWidth: 0 } }}
+          PaperProps={{ sx: { backgroundColor: "background.default" }}}
         >
-          <IconButton onClick={toggleDrawer}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </Toolbar>
-        <ListComponent />
-      </Drawer>
+          <Toolbar
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              px: [1],
+              bgcolor: "background.default",
+            }}
+          >
+            <IconButton onClick={toggleDrawer}>
+              <ChevronLeftIcon />
+            </IconButton>
+          </Toolbar>
+          <ListComponent />
+        </DrawerDesktop>
+      </Hidden>
+
+      <Hidden smUp>
+        <DrawerMobile
+          open={open}
+          onClose={toggleDrawer}
+          ModalProps={{
+              keepMounted: true // Better open performance on mobile.
+            }}
+        >
+          <Box
+            sx={{ width: drawerWidth }}
+            role="presentation"
+            onClick={toggleDrawer}
+            onKeyDown={toggleDrawer}
+          >
+            <ListComponent />
+          </Box>
+        </DrawerMobile>
+      </Hidden>
     </React.Fragment>
   )
 }
