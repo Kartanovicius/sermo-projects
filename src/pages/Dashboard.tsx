@@ -14,7 +14,7 @@ function DashboardContent() {
   
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant='h4' fontWeight={ 'bold' }>
+      <Typography fontWeight={ 'bold' } sx={{ typography: { sm: 'h4', xs: 'h6' } }}>
         Hello there, {email}
       </Typography>
       <Typography variant='subtitle1' sx={{ mb: 5}}>
