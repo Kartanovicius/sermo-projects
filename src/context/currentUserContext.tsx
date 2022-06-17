@@ -9,6 +9,7 @@ export default function UserProvider({children}: any) {
   const [userFirst, setUserFirst] = useState<User | undefined>();
   const [userLast, setUserLast] = useState<User | undefined>();
   const [userEmailAddress, setUserEmailAddress] = useState<User | undefined>();
+  const [userLoading, setUserLoading] = useState<boolean>(true);
 
   const { currentUser } = useAuth()
   const uid = currentUser.uid
@@ -19,6 +20,7 @@ export default function UserProvider({children}: any) {
       setUserFirst(user?.first)
       setUserLast(user?.last)
       setUserEmailAddress(user?.emailAddress)
+      setUserLoading(false)
     }
 
     if (uid) {
@@ -29,7 +31,8 @@ export default function UserProvider({children}: any) {
   const value = {
     userFirst,
     userLast,
-    userEmailAddress
+    userEmailAddress,
+    userLoading,
   }
 
   return (
