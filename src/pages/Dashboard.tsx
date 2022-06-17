@@ -4,18 +4,15 @@ import { Grid, Container, Typography } from '@mui/material';
 //components
 import Projects from '../components/dashboard/Projects';
 import Weather from '../components/dashboard/Weather';
-import useUser from '../hooks/use-user';
-import { useAuth } from '../context/authContext';
+import { useCurrentUser } from '../context/currentUserContext';
 
 function DashboardContent() {
-  const { currentUser } = useAuth()
-  const { user } = useUser(currentUser.uid)
-  const email: string = user?.emailAddress
+  const { userEmailAddress } = useCurrentUser()
   
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth='lg' sx={{ mt: 4, mb: 4 }}>
       <Typography style={{fontWeight:'700'}} sx={{ typography: { sm: 'h4', xs: 'h6' } }}>
-        Hello there, {email}
+        Hello there, {userEmailAddress}
       </Typography>
       <Typography variant='subtitle1' sx={{ mb: 5}}>
         What's new
