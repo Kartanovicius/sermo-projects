@@ -11,6 +11,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
           primary: {
             light: '#f4f9fc',
             main: '#056DFF',
+            contrastText: '#fafafa',
           },
           background: {
             default: '#eef6f8',
@@ -29,6 +30,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
           primary: {
             light: '#282c3c',
             main: '#3ea3fe',
+            contrastText: '#fafafa',
           },
           background: {
             default: '#222430',
