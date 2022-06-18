@@ -7,14 +7,12 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: 'center',
   boxShadow: 'none',
   fontSize: 11,
-  backgroundImage: 'none',
 }));
 
 const Link = styled(Paper)(({ theme }) => ({
   textAlign: 'right',
   boxShadow: 'none',
   fontSize: 12,
-  backgroundImage: 'none',
   '& a': {
     color: theme.palette.text.secondary,
   },
