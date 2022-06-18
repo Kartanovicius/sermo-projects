@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { createTheme, PaletteMode, ThemeProvider } from '@mui/material';
+import { alpha, createTheme, PaletteMode, ThemeProvider } from '@mui/material';
 import { Shadows } from '@mui/material/styles/shadows';
 
 const getDesignTokens = (mode: PaletteMode) => ({
@@ -50,6 +50,13 @@ const getDesignTokens = (mode: PaletteMode) => ({
       'Inter',
       'sans-serif',
     ].join(','),
+  },
+  components: {
+    MuiPaper: {
+      defaultProps: {
+        elevation: 0,
+      },
+    },
   },
   shadows: Array(25).fill('none') as Shadows,
 });
