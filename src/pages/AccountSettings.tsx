@@ -1,11 +1,14 @@
-import React, { useRef } from 'react'
-import { Paper, Grid, Container, Typography, Avatar, Icon, Skeleton, TextField, Button, Card, Box } from '@mui/material';
-import { useCurrentUser } from '../context/currentUserContext';
-import { useAuth } from '../context/authContext';
+import React, { useRef, useState } from 'react'
+import { Paper, Grid, Container, Typography, Avatar, Icon, Skeleton, TextField, Button, Card, Box, Alert, Collapse } from '@mui/material'
+import { useCurrentUser } from '../context/currentUserContext'
+import { useAuth } from '../context/authContext'
+import { updateEmail } from 'firebase/auth'
+import { updateUserFirstByUserId, updateUserLastByUserId } from '../services/firebase'
+import { isEmpty } from '@firebase/util'
 
 function ProfileContent() {
-  const { userFirst, userLast, userEmailAddress, userLoading } = useCurrentUser()
-
+  const { userFirst, userLast, userEmailAddress, userLoading, setUpdated } = useCurrentUser()
+  const { currentUser } = useAuth()
   const nameFirstLetter: string = userFirst?.charAt(0).toUpperCase()
   const surnameFirstLetter: string = userLast?.charAt(0).toUpperCase()
 
@@ -13,7 +16,36 @@ function ProfileContent() {
   const userLastRef = useRef(userLast)
   const userEmailAddressRef = useRef(userEmailAddress)
 
+  const [alertUpdated, setAlertUpdated] = useState<string[]>([])
+
   function updateUser() {
+    setAlertUpdated([])
+    try {
+      updateUserFirstByUserId(currentUser.uid, userFirstRef.current.value).then(res => {
+        if (res.status === 'fulfilled' && userFirst !== res.value) {
+          setAlertUpdated(prevVale => [...prevVale, 'First Name'])
+        }
+      })
+
+      updateUserLastByUserId(currentUser.uid, userLastRef.current.value)
+      .then(res => { 
+        if (res.status === 'fulfilled' && userLast !== res.value) {
+          setAlertUpdated(prevVale => [...prevVale, 'Last Name'])
+        }
+      })
+
+      setUpdated(true)
+
+    } catch (e) {
+      console.log(e)
+    }
+
+    updateEmail(currentUser, userEmailAddressRef.current.value).then(() => {
+      // Email updated!
+      // ...
+    }).catch((e) => {
+
+    });
   }
 
   function updateUserProfile() {
@@ -28,7 +60,10 @@ function ProfileContent() {
 
   return (
     <Container maxWidth="lg">
-      <Container sx={{ mt: 4, mb: 4, minHeight: `calc(100vh - 76px - 3.2rem)` }} disableGutters>
+      <Container sx={{ mt: 4, mb: 4, minHeight: `calc(100vh - 64px - 64px - 68px)` }} disableGutters>
+      <Collapse in={isEmpty(alertUpdated) ? false : true} sx={{ my: 2 }}>
+        <Alert severity="success">Successfully updated user {alertUpdated.length === 2 ? alertUpdated.join(" and ") : alertUpdated.join(", ")}!</Alert>
+      </Collapse>
       <Typography style={{ fontWeight: 'bold', marginBottom: 16 }} variant='h4'>{userLoading ? <Skeleton /> : `${userFirst} ${userLast}`}</Typography>
       <Grid container spacing={3}>
         <Grid item xs={12}>
@@ -101,9 +136,9 @@ function ProfileContent() {
         <Button variant="contained" onClick={(e) => updateUserProfile()}>Save</Button>
       </Paper>
     </Container>
-  );
+  )
 }
 
 export default function Profile() {
-  return <ProfileContent />;
+  return <ProfileContent />
 }
