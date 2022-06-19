@@ -57,6 +57,43 @@ const getDesignTokens = (mode: PaletteMode) => ({
         elevation: 0,
       },
     },
+    MuiFilledInput: {
+      styleOverrides: {
+        input: {
+          border: '1px solid #e2e2e1',
+          overflow: 'hidden',
+          borderRadius: 4,
+          backgroundColor: mode === 'light' ? '#fff' : '#34384a',
+          '&& .MuiInput-root:hover::before': {
+            borderColor: 'red',
+          },
+          '&:hover': {
+            boxShadow: `${alpha(mode === 'light' ? '#f4f9fc' : '#3ea3fe', 0.25)} 0 0 0 2px`,
+            borderColor: mode === 'light' ? '#f4f9fc' : '#3ea3fe',
+          },
+          '&:focus': {
+            backgroundColor: mode === 'light' ? '#asdasd' : '#asdasd',
+            boxShadow: `${alpha(mode === 'light' ? '#f4f9fc' : '#3ea3fe', 0.25)} 0 0 0 2px`,
+            borderColor: mode === 'light' ? '#f4f9fc' : '#3ea3fe',
+          },
+        },
+        // Remove underline
+        underline: {
+          '&:before': {
+            borderBottomColor: 'transparent',
+          },
+          '&:hover:not(.Mui-disabled)::before': {
+            borderBottomColor: 'transparent',
+          },
+          '&:after': {
+            borderBottomColor: 'transparent',
+          },
+          '&:focus:not(.Mui-disabled)::after': {
+            borderBottomColor: 'transparent',
+          },
+        },
+      },
+    },
   },
   shadows: Array(25).fill('none') as Shadows,
 });
