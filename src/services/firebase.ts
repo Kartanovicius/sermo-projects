@@ -14,37 +14,17 @@ export async function getUserByUserId(uid: string) {
     }
 }
 
-export async function updateUserFirstByUserId(uid: string, newUserName: string) {
+export async function updateFieldByUserId(uid: string, newValue: {first?: string, last?: string, emailAddress?: 'string'}) {
   const userRef = collection(db, 'users')
 
   const q = query(userRef, where('uid', '==', uid))
 
   try {
     const querySnapshot = await getDocs(q)
-    updateDoc(querySnapshot.docs[0].ref, {first: newUserName})
+    updateDoc(querySnapshot.docs[0].ref, newValue)
     return {
       status: 'fulfilled',
-      value: newUserName
-    }
-  } catch(e) {
-    return {
-      status: 'rejected',
-      error: e,
-    }
-  }
-}
-
-export async function updateUserLastByUserId(uid: string, newUserLastName: string) {
-  const userRef = collection(db, 'users')
-
-  const q = query(userRef, where('uid', '==', uid))
-
-  try {
-    const querySnapshot = await getDocs(q)
-    updateDoc(querySnapshot.docs[0].ref, {last: newUserLastName})
-    return {
-      status: 'fulfilled',
-      value: newUserLastName
+      value: newValue
     }
   } catch(e) {
     return {
