@@ -1,30 +1,43 @@
-import * as React from 'react'
-import { useParams } from 'react-router-dom';
-import { Paper, Grid, Container } from '@mui/material';
+import React, { useState } from 'react'
+// Material-ui
+import { Container, Typography, Skeleton, Alert, Collapse, Grid, AlertColor } from '@mui/material'
+// npm packages
+import { DialogProvider } from 'react-dialog-async'
+// Contexts
+import { useCurrentUser } from '../context/currentUserContext'
+// Components
+import UserInformation from '../components/accountSettings/UserInformation'
+import ChangePassword from '../components/accountSettings/ChangePassword'
 
+function AccountSettingsContent() {
+  const { userFirst, userLast, userLoading } = useCurrentUser()
 
-function ProfileContent() {
-  let params = useParams();
+  const [alerts, setAlerts] = useState<{message: string, variant: AlertColor}[]>([])
+
+  const alertsList = alerts.map((alert) =>
+    <Collapse in={true} sx={{ my: 2 }} key={alert.message}>
+      <Alert severity={alert.variant}>
+        {alert.message}
+      </Alert>
+    </Collapse>
+  )
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <div>{params.userid}</div>
-          </Paper>
+    <DialogProvider>
+      <Container maxWidth='lg'>
+        <Container sx={{ mt: 4, mb: 4, minHeight: `calc(100vh - 64px - 64px - 68px)` }} disableGutters>
+        {alertsList}
+        <Typography style={{ fontWeight: 'bold', marginBottom: 16 }} variant='h4'>{userLoading ? <Skeleton /> : `${userFirst} ${userLast}`}</Typography>
+        <Grid container spacing={3}>
+          <UserInformation setAlerts={setAlerts}/>
+          <ChangePassword setAlerts={setAlerts}/>
         </Grid>
-      </Grid>
-    </Container>
-  );
+        </Container>
+      </Container>
+    </DialogProvider>
+  )
 }
 
-export default function Profile() {
-  return <ProfileContent />;
+export default function AccountSettings() {
+  return <AccountSettingsContent />
 }
