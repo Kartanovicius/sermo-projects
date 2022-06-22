@@ -1,7 +1,7 @@
-import { Avatar, Icon, Button, styled, Menu } from '@mui/material';
-import { useState } from 'react';
-import { AvatarMenuItems } from './AvatarMenuItems';
-import { useCurrentUser } from '../../context/currentUserContext';
+import { Avatar, Icon, Button, styled, Menu } from '@mui/material'
+import { useState } from 'react'
+import { AvatarMenuItems } from './AvatarMenuItems'
+import { useCurrentUser } from '../../context/currentUserContext'
 
 const AvatarButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -13,22 +13,21 @@ const AvatarButton = styled(Button)(({ theme }) => ({
   fontWeight: 'normal',
   border: 'none',
   textTransform: 'lowercase'
-}));
+}))
 
 function AvatarMenuContent() {
   const { userFirst, userLast, userEmailAddress } = useCurrentUser()
   const nameFirstLetter: string = userFirst?.charAt(0).toUpperCase()
   const surnameFirstLetter: string = userLast?.charAt(0).toUpperCase()
-  const email: string = userEmailAddress
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const openAvatar = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const openAvatar = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
   
   return (
     <>
@@ -36,7 +35,7 @@ function AvatarMenuContent() {
         <Icon sx={{ mr: 1, width: 30, height: 30 }}>
           <Avatar sx={{ width: 30, height: 30, bgcolor: 'primary.main', color: 'common.white', fontSize: 14 }}>{nameFirstLetter}{surnameFirstLetter}</Avatar>
         </Icon>
-        {email}
+        {userEmailAddress}
       </AvatarButton>
 
       <Menu
@@ -74,9 +73,9 @@ function AvatarMenuContent() {
         <AvatarMenuItems setAnchorEl={setAnchorEl}/>
       </Menu>
     </>
-  );
+  )
 }
 
 export default function AvatarMenu() {
-  return <AvatarMenuContent />;
+  return <AvatarMenuContent />
 }
