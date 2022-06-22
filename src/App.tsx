@@ -12,7 +12,6 @@ import ColorModeProvider from './styles/ColorModeContext'
 const Signin = lazy(() => import('./pages/Signin'))
 const Signup = lazy(() => import('./pages/Signup'))
 const Main = lazy(() => import('./pages/Main'))
-const CreateProject = lazy(() => import('./pages/CreateProject'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 function App() {
@@ -61,13 +60,6 @@ function App() {
             <Route path={ROUTES.MAIN} element={<Dashboard />}/>
             <Route path={ROUTES.ACCOUNTSETTINGS+':userid'} element={<Profile />}/>
           </Route>
-
-          <Route path={ROUTES.CREATE_NEW_PROJECT} element={
-            <ProtectedRoute
-              {...defaultProtectedRouteProps}
-              outlet={<CreateProject />}
-            />
-          }/>
 
           <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
 

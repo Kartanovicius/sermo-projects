@@ -1,11 +1,15 @@
 // Material-ui
 import { ListItemText, ListItemButton, List, ListSubheader, Divider, Button, Box } from '@mui/material'
+import { useDialog } from 'react-dialog-async'
 // npm packages
-import { useNavigate } from 'react-router-dom'
-import * as ROUTES from '../../constants/routes'
+import { CreateProjectDialog } from './CreateProjectDialog'
 
 function ProjectsContent() {
-  const navigate = useNavigate()
+  const createProjectDialog = useDialog(CreateProjectDialog)
+
+  async function CreateProjectDialogHandler() {
+    await createProjectDialog.show('')
+  }
 
   return (
     <>
@@ -15,7 +19,7 @@ function ProjectsContent() {
         justifyContent: 'space-between',
         mb: 2,
       }}>
-        <Button variant='contained' onClick={(e) => navigate(ROUTES.CREATE_NEW_PROJECT)}>Create new project</Button>
+        <Button variant='contained' onClick={(e) => CreateProjectDialogHandler()}>Create new project</Button>
       </Box>
       <List
       sx={{bgcolor: 'background.paper', borderRadius: 1, padding: 0}}
