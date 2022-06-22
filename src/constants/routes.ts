@@ -3,3 +3,4 @@ export const SIGN_IN = '/sign-in';
 export const SIGN_UP = '/sign-up';
 export const NOT_FOUND = '/*';
 export const ACCOUNTSETTINGS = '/account-settings/'
+export const CREATE_NEW_PROJECT = '/create-project'
