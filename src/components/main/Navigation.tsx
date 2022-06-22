@@ -98,7 +98,7 @@ export default function Navigation() {
 
   return (
     <React.Fragment>
-      <AppBar position='absolute' open={open} color='transparent'>
+      <AppBar position='absolute' open={open}>
       <Toolbar
           sx={{
             pr: '24px', // keep right padding when drawer closed

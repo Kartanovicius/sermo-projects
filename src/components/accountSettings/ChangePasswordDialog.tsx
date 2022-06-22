@@ -57,7 +57,6 @@ export const ChangePasswordDialog: React.FC<AsyncDialogProps<string, { message: 
           onChange={e => setPreviousPassword(e.target.value)}
         />
         <TextField
-          autoFocus
           margin='dense'
           id='newPassword'
           label='Password'

@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { alpha, createTheme, PaletteMode, ThemeProvider } from '@mui/material';
-import { Shadows } from '@mui/material/styles/shadows';
+import { createContext, useContext, useEffect, useState } from 'react'
+import { alpha, createTheme, PaletteMode, ThemeProvider } from '@mui/material'
+import { Shadows } from '@mui/material/styles/shadows'
 
 const getDesignTokens = (mode: PaletteMode) => ({
   palette: {
@@ -57,6 +57,16 @@ const getDesignTokens = (mode: PaletteMode) => ({
         elevation: 0,
       },
     },
+    MuiAppBar: {
+      defaultProps: {
+        elevation: 0,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: mode === 'light' ? '#eef6f8' : '#222430',        
+        }
+      }
+    },
     MuiFilledInput: {
       styleOverrides: {
         input: {
@@ -96,26 +106,26 @@ const getDesignTokens = (mode: PaletteMode) => ({
     },
   },
   shadows: Array(25).fill('none') as Shadows,
-});
+})
 
-const ColorModeContext = createContext<any|null>(null);
+const ColorModeContext = createContext<any|null>(null)
 
 export default function ColorModeProvider({children}: any) {
-  const [mode, setMode] = useState<PaletteMode>('light');
+  const [mode, setMode] = useState<PaletteMode>('light')
 
-  const modeTheme = createTheme(getDesignTokens(mode));
+  const modeTheme = createTheme(getDesignTokens(mode))
 
   useEffect(() => {
-    const existingPreference = localStorage.getItem('theme-data');
+    const existingPreference = localStorage.getItem('theme-data')
     if (existingPreference) {
      ( existingPreference === 'light')
         ? setMode('light')
-        : setMode('dark');
+        : setMode('dark')
     } else {
-      setMode('light');
-      localStorage.setItem('theme-data', 'light');
+      setMode('light')
+      localStorage.setItem('theme-data', 'light')
     }
-  }, []);
+  }, [])
 
   const value = {
     mode,
