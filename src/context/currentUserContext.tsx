@@ -12,7 +12,6 @@ export default function UserProvider({children}: any) {
   const [userLoading, setUserLoading] = useState<boolean>(true)
   const [updated, setUpdated] = useState<boolean>(false)
 
-
   const { currentUser } = useAuth()
   const uid = currentUser.uid
 

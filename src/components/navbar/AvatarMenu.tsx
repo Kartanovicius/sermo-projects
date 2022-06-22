@@ -1,15 +1,14 @@
 import { Avatar, Icon, Button, styled, Menu } from '@mui/material';
 import { useState } from 'react';
-import useUser from '../../hooks/use-user';
-import { useAuth } from '../../context/authContext';
 import { AvatarMenuItems } from './AvatarMenuItems';
+import { useCurrentUser } from '../../context/currentUserContext';
 
-const AvatarButton = styled(Button)(() => ({
-  backgroundColor: '#f9f9f9',
-  color: '#000',
+const AvatarButton = styled(Button)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  color: theme.palette.text.primary,
   '&:hover': {
-    backgroundColor: "#fff",
-    color: "#086cff",
+    backgroundColor: theme.palette.background.paper[100],
+    color: theme.palette.primary.main,
   },
   fontWeight: 'normal',
   border: 'none',
@@ -17,11 +16,10 @@ const AvatarButton = styled(Button)(() => ({
 }));
 
 function AvatarMenuContent() {
-  const { currentUser } = useAuth()
-  const { user } = useUser(currentUser.uid)
-  const nameFirstLetter: string = user?.first.charAt(0).toUpperCase()
-  const surnameFirstLetter: string = user?.last.charAt(0).toUpperCase()
-  const email: string = user?.emailAddress
+  const { userFirst, userLast, userEmailAddress } = useCurrentUser()
+  const nameFirstLetter: string = userFirst?.charAt(0).toUpperCase()
+  const surnameFirstLetter: string = userLast?.charAt(0).toUpperCase()
+  const email: string = userEmailAddress
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openAvatar = Boolean(anchorEl);
@@ -36,41 +34,42 @@ function AvatarMenuContent() {
     <>
       <AvatarButton onClick={handleClick}>
         <Icon sx={{ mr: 1, width: 30, height: 30 }}>
-          <Avatar sx={{ width: 30, height: 30, bgcolor: "primary.main", fontSize: 14 }}>{nameFirstLetter}{surnameFirstLetter}</Avatar>
+          <Avatar sx={{ width: 30, height: 30, bgcolor: 'primary.main', color: 'common.white', fontSize: 14 }}>{nameFirstLetter}{surnameFirstLetter}</Avatar>
         </Icon>
         {email}
       </AvatarButton>
 
       <Menu
         anchorEl={anchorEl}
-        id="account-menu"
+        id='account-menu'
         open={openAvatar}
         onClose={handleClose}
         PaperProps={{
           sx: {
-            overflow: "visible",
+            backgroundImage: 'none',
+            overflow: 'visible',
             mt: 0.5,
-            "& .MuiAvatar-root": {
+            '& .MuiAvatar-root': {
               width: 32,
               height: 32,
               ml: -0.5,
               mr: 1,
             },
-            "&:before": {
-              content: "''",
-              display: "block",
-              position: "absolute",
+            '&:before': {
+              content: '""',
+              display: 'block',
+              position: 'absolute',
               top: 0,
               right: 14,
               width: 10,
               height: 10,
-              transform: "translateY(-50%) rotate(45deg)",
+              transform: 'translateY(-50%) rotate(45deg)',
               zIndex: 0,
             },
           },
         }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <AvatarMenuItems setAnchorEl={setAnchorEl}/>
       </Menu>

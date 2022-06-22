@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 //Mui
 import { styled } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
@@ -10,7 +10,6 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 //Custom
 import { ListComponent } from './ListComponent';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-//Contexts
 import AvatarMenu from './AvatarMenu';
 
 const drawerWidth: number = 240;
@@ -71,6 +70,7 @@ const DrawerMobile = styled(MuiDrawer)(
     zIndex: theme.zIndex.drawer + 2,
     '& .MuiDrawer-paper': {
       backgroundColor: theme.palette.background.default,
+      backgroundImage: 'none',
       borderTopRightRadius: 16,
       borderBottomRightRadius: 16,
       paddingTop: 32,
@@ -80,31 +80,38 @@ const DrawerMobile = styled(MuiDrawer)(
 );
 
 export default function Navigation() {
-
-  const [open, setOpen] = React.useState(window.innerWidth < 769 ? false : true);
+  const [open, setOpen] = useState(window.innerWidth < 769 ? false : true);
   const toggleDrawer = () => {
     setOpen(!open);
     if (open) {
-      document.body.style.overflow = "hidden"
+      document.body.style.overflow = 'hidden'
     }
   };
 
+  useEffect(() => {
+    window.addEventListener('resize', () => {
+      if (window.innerWidth <= 600) {
+        setOpen(false)
+      }
+    })
+  })
+
   return (
     <React.Fragment>
-      <AppBar position="absolute" open={open} sx={{ bgcolor: "background.default"}}>
+      <AppBar position='absolute' open={open} color='transparent'>
       <Toolbar
           sx={{
-            pr: "24px", // keep right padding when drawer closed
-            justifyContent: "space-between"
+            pr: '24px', // keep right padding when drawer closed
+            justifyContent: 'space-between'
           }}
         >
           <IconButton
-            edge="start"
-            aria-label="open drawer"
+            edge='start'
+            aria-label='open drawer'
             onClick={toggleDrawer}
             sx={{
-              marginRight: "36px",
-              ...(open && { visibility: "hidden" }),
+              marginRight: '36px',
+              ...(open && { visibility: 'hidden' }),
             }}
           >
             <MenuIcon />
@@ -115,20 +122,20 @@ export default function Navigation() {
         </Toolbar>
       </AppBar>
       <Hidden smDown>
-        <DrawerDesktop variant="permanent" open={open} 
-          sx={{ "& .MuiDrawer-paper": { borderWidth: 0 } }}
-          PaperProps={{ sx: { backgroundColor: "background.default" }}}
+        <DrawerDesktop variant='permanent' open={open} 
+          sx={{ '& .MuiDrawer-paper': { borderWidth: 0 } }}
+          PaperProps={{ sx: { backgroundColor: 'background.default' }}}
         >
           <Toolbar
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
               px: [1],
-              bgcolor: "background.default",
+              bgcolor: 'background.default',
             }}
           >
-            <IconButton onClick={toggleDrawer}>
+            <IconButton onClick={toggleDrawer} sx={{ display: open === true ? 'block' : 'none'}}>
               <ChevronLeftIcon />
             </IconButton>
           </Toolbar>
@@ -146,7 +153,7 @@ export default function Navigation() {
         >
           <Box
             sx={{ width: drawerWidth }}
-            role="presentation"
+            role='presentation'
             onClick={toggleDrawer}
             onKeyDown={toggleDrawer}
           >

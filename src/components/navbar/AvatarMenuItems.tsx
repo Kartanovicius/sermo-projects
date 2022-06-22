@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FormControlLabel, MenuItem, styled, Switch } from '@mui/material'
 import { useAuth } from '../../context/authContext';
 import { useNavigate } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes'
+import { useColorMode } from '../../styles/ColorModeContext';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -22,16 +23,16 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
       },
       '& + .MuiSwitch-track': {
         opacity: 1,
-        backgroundColor: theme.palette.mode === 'dark' ? '#8796A5' : '#aab4be',
+        backgroundColor: theme.palette.primary.main,
       },
     },
   },
   '& .MuiSwitch-thumb': {
-    backgroundColor: theme.palette.mode === 'dark' ? '#003892' : '#001e3c',
+    backgroundColor: theme.palette.common.black,
     width: 32,
     height: 32,
     '&:before': {
-      content: "''",
+      content: '""',
       position: 'absolute',
       width: '100%',
       height: '100%',
@@ -46,7 +47,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
   '& .MuiSwitch-track': {
     opacity: 1,
-    backgroundColor: theme.palette.mode === 'dark' ? '#8796A5' : '#aab4be',
+    backgroundColor: theme.palette.primary.main,
     borderRadius: 20 / 2,
   },
 }));
@@ -59,18 +60,32 @@ export const AvatarMenuItems = (props: any) => {
     props.setAnchorEl(null);
   };
 
+  // Theme mode switch
+  const { mode, setMode } = useColorMode()
+  const [switchState, setSwitchState] = useState<boolean>(mode === 'light' ? false : true)
+  function changeColor() {
+    setSwitchState(switchState === true ? false : true);
+    if (mode === 'light') {
+      setMode('dark');
+      localStorage.setItem('theme-data', 'dark');
+    } else {
+      setMode('light');
+      localStorage.setItem('theme-data', 'light');
+    }
+  }
+
   return (
     <React.Fragment>
-      <MenuItem onClick={(e) => {handleClose(); navigate(ROUTES.ACCOUNTSETTINGS+currentUser.uid);}} sx={{color: "primary.main"}}>
+      <MenuItem onClick={(e) => {handleClose(); navigate(ROUTES.ACCOUNTSETTINGS+currentUser.uid);}} sx={{color: 'primary.main'}}>
         Account settings
       </MenuItem>
       <MenuItem onClick={signOutUser}>
         Log out
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={(e) => changeColor()}>
         <FormControlLabel
-          control={<MaterialUISwitch sx={{ m: 0.5 }} defaultChecked />}
-          label="Light, Dark theme switch"
+          control={<MaterialUISwitch sx={{ m: 0.5 }} checked={switchState} />}
+          label='Theme switch'
         />
       </MenuItem>
     </React.Fragment>
