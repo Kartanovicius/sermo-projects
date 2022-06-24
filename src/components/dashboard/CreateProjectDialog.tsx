@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 // Material-ui
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material'
 // npm packages
 import { AsyncDialogProps } from 'react-dialog-async'
 // Firebase
@@ -32,32 +32,36 @@ export const CreateProjectDialog: React.FC<AsyncDialogProps<string, string>> =
     <Dialog open={open} onClose={() => handleClose()}>
       <DialogTitle>Create new project</DialogTitle>
       <DialogContent>
+        <Typography variant='subtitle2'>To create a new project record, please fill all required fields</Typography>
         <TextField
           autoFocus
           margin='dense'
           id='code'
-          label='Code'
-          type='number'
+          label='Project code'
+          type='tel'
           fullWidth
           variant='filled'
+          required
           onChange={e => setCode(parseInt(e.target.value))}
         />
         <TextField
           margin='dense'
           id='client'
-          label='Client'
+          label='Project client'
           type='text'
           fullWidth
           variant='filled'
+          required
           onChange={e => setClient(e.target.value)}
         />
         <TextField
           margin='dense'
           id='name'
-          label='Name'
+          label='Project name'
           type='text'
           fullWidth
           variant='filled'
+          required
           onChange={e => setName(e.target.value)}
         />
       </DialogContent>
@@ -67,7 +71,7 @@ export const CreateProjectDialog: React.FC<AsyncDialogProps<string, string>> =
           disabled={code < 100000 || client.length === 0 || name.length === 0} 
           onClick={() => {createProjectHandler()}}
         >
-          Confirm
+          Create
         </Button>
       </DialogActions>
     </Dialog> 
