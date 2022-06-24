@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { FormControlLabel, MenuItem, styled, Switch } from '@mui/material'
-import { useAuth } from '../../context/authContext';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/authContext'
+import { useColorMode } from '../../styles/ColorModeContext'
+import { useNavigate } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
-import { useColorMode } from '../../styles/ColorModeContext';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,

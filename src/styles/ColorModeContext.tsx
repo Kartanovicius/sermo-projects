@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { alpha, createTheme, PaletteMode, ThemeProvider } from '@mui/material';
-import { Shadows } from '@mui/material/styles/shadows';
+import { createContext, useContext, useEffect, useState } from 'react'
+import { alpha, createTheme, PaletteMode, ThemeProvider } from '@mui/material'
+import { Shadows } from '@mui/material/styles/shadows'
 
 const getDesignTokens = (mode: PaletteMode) => ({
   palette: {
@@ -57,13 +57,41 @@ const getDesignTokens = (mode: PaletteMode) => ({
         elevation: 0,
       },
     },
+    MuiAppBar: {
+      defaultProps: {
+        elevation: 0,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: mode === 'light' ? '#eef6f8' : '#222430',    
+        }
+      }
+    },
+    MuiDialog: {
+      styleOverrides: {
+        root: {
+          '.MuiDialog-paper': {
+            backgroundImage: 'none',
+          }
+        }
+      }
+    },
     MuiFilledInput: {
       styleOverrides: {
+        root: {
+          backgroundColor: 'transparent',
+          '&:hover': {
+            backgroundColor: 'transparent',
+          },
+          '&:focus': {
+            backgroundColor: 'transparent',
+          },
+        },
         input: {
           border: '1px solid #e2e2e1',
           overflow: 'hidden',
           borderRadius: 4,
-          backgroundColor: mode === 'light' ? '#fff' : '#34384a',
+          backgroundColor: 'transparent',
           '&& .MuiInput-root:hover::before': {
             borderColor: 'red',
           },
@@ -72,9 +100,12 @@ const getDesignTokens = (mode: PaletteMode) => ({
             borderColor: mode === 'light' ? '#f4f9fc' : '#3ea3fe',
           },
           '&:focus': {
-            backgroundColor: mode === 'light' ? '#asdasd' : '#asdasd',
+            backgroundColor: 'transparent',
             boxShadow: `${alpha(mode === 'light' ? '#f4f9fc' : '#3ea3fe', 0.25)} 0 0 0 2px`,
             borderColor: mode === 'light' ? '#f4f9fc' : '#3ea3fe',
+          },
+          '&:-webkit-autofill': {
+            WebkitBoxShadow: `0 0 0 100px ${mode === 'light' ? '#fff' : '#34384a'} inset`,
           },
         },
         // Remove underline
@@ -96,26 +127,26 @@ const getDesignTokens = (mode: PaletteMode) => ({
     },
   },
   shadows: Array(25).fill('none') as Shadows,
-});
+})
 
-const ColorModeContext = createContext<any|null>(null);
+const ColorModeContext = createContext<any|null>(null)
 
 export default function ColorModeProvider({children}: any) {
-  const [mode, setMode] = useState<PaletteMode>('light');
+  const [mode, setMode] = useState<PaletteMode>('light')
 
-  const modeTheme = createTheme(getDesignTokens(mode));
+  const modeTheme = createTheme(getDesignTokens(mode))
 
   useEffect(() => {
-    const existingPreference = localStorage.getItem('theme-data');
+    const existingPreference = localStorage.getItem('theme-data')
     if (existingPreference) {
      ( existingPreference === 'light')
         ? setMode('light')
-        : setMode('dark');
+        : setMode('dark')
     } else {
-      setMode('light');
-      localStorage.setItem('theme-data', 'light');
+      setMode('light')
+      localStorage.setItem('theme-data', 'light')
     }
-  }, []);
+  }, [])
 
   const value = {
     mode,

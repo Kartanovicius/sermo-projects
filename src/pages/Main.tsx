@@ -1,38 +1,38 @@
 // Material-ui
-import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Navigation from '../components/navbar/Navigation';
+import CssBaseline from '@mui/material/CssBaseline'
+import Box from '@mui/material/Box'
+import Toolbar from '@mui/material/Toolbar'
+import Navigation from '../components/main/Navigation'
 // react-router-dom
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom'
 // Contexts
-import WeatherProvider from '../context/weatherContext';
-import CurrentUserProvider from '../context/currentUserContext';
+import WeatherProvider from '../context/weatherContext'
+import CurrentUserProvider from '../context/currentUserContext'
+import { DialogProvider } from 'react-dialog-async'
 
 export default function Main() {
   
   return (
     <CurrentUserProvider>
       <WeatherProvider>
-        <Box sx={{ display: 'flex' }}>
-          <CssBaseline />
-          <Navigation />
-          <Box
+        <DialogProvider>
+          <Box sx={{ display: 'flex' }}>
+            <CssBaseline />
+            <Navigation />
+            <Box
             component='main'
             sx={{
               flexGrow: 1,
               height: '100vh',
               overflow: 'auto',
             }}
-          >          
-
-            <Toolbar />
-
-            <Outlet />
-
+            >
+              <Toolbar />
+              <Outlet />
+            </Box>
           </Box>
-        </Box>
+        </DialogProvider>
       </WeatherProvider>
     </CurrentUserProvider>
-  );
+  )
 }

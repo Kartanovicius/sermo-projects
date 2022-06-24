@@ -1,11 +1,11 @@
-import React, { useState, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useRef } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import * as ROUTES from '../constants/routes'
 //Firebase
-import { db } from '../lib/firebase';
-import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../lib/firebase'
+import { addDoc, collection } from 'firebase/firestore'
 import { useAuth } from '../context/authContext'
-import { FirebaseError } from 'firebase/app';
+import { FirebaseError } from 'firebase/app'
 //Material UI
 import { 
   Typography,
@@ -15,12 +15,12 @@ import {
   Grid,
   Box,
   Container,
-} from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+} from '@mui/material'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
 //Components
 import Copyright from '../components/Copyright'
 
-const theme = createTheme();
+const theme = createTheme()
 
 interface alertInterface {
   status: boolean
@@ -29,11 +29,11 @@ interface alertInterface {
 
 
 export default function SignUp() {
-  const firstnameRef = useRef<HTMLInputElement>();
-  const lastnameRef = useRef<HTMLInputElement>();
-  const emailRef = useRef<HTMLInputElement>();
-  const passwordRef = useRef<HTMLInputElement>();
-  const passwordConfirmRef = useRef<HTMLInputElement>();
+  const firstnameRef = useRef<HTMLInputElement>()
+  const lastnameRef = useRef<HTMLInputElement>()
+  const emailRef = useRef<HTMLInputElement>()
+  const passwordRef = useRef<HTMLInputElement>()
+  const passwordConfirmRef = useRef<HTMLInputElement>()
 
   const [firstnameErrorStatus, setfirstnameErrorStatus] = useState<alertInterface>({'status': false, 'message': ''})
   const [lastnameErrorStatus, setlastnameErrorStatus] = useState<alertInterface>({'status': false, 'message': ''})
@@ -43,15 +43,15 @@ export default function SignUp() {
 
   const { createUser } = useAuth()
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const nameVal: string | undefined = firstnameRef.current?.value;
-    const lastnameVal: string | undefined = lastnameRef.current?.value;
-    const emailVal: string | undefined = emailRef.current?.value;
-    const passwordVal: string | undefined = passwordRef.current?.value;
-    const passwordConfirmVal: string | undefined = passwordConfirmRef.current?.value;
+    event.preventDefault()
+    const nameVal: string | undefined = firstnameRef.current?.value
+    const lastnameVal: string | undefined = lastnameRef.current?.value
+    const emailVal: string | undefined = emailRef.current?.value
+    const passwordVal: string | undefined = passwordRef.current?.value
+    const passwordConfirmVal: string | undefined = passwordConfirmRef.current?.value
 
     try {
       // Check if all inputs filled
@@ -73,43 +73,43 @@ export default function SignUp() {
 
       // Does passwords match
       if (passwordVal !== passwordConfirmVal) {  
-        throw new Error('Password-is-not-matching');
+        throw new Error('Password-is-not-matching')
       }
 
       // Firebase auth
       const createdUserResult = await createUser(emailRef.current?.value, passwordRef.current?.value)
 
-      await addDoc(collection(db, "users"), {
+      await addDoc(collection(db, 'users'), {
         uid: createdUserResult.user.uid,
         first: nameVal,
         last: lastnameVal,
         emailAddress: emailVal,
         projects: [],
         dateCreated: Date.now(),
-      });
+      })
       
       navigate(ROUTES.MAIN)
     } catch (e) {
       if (e instanceof FirebaseError) {
-        if(e.message.includes("auth/weak-password")){
+        if(e.message.includes('auth/weak-password')){
           setPasswordErrorStatus({'status': true, 'message': 'Password should containt minimum 6 characters'})
           setPasswordConfirmErrorStatus({'status': true, 'message': 'Password should containt minimum 6 characters'})
         }
-        if(e.message.includes("auth/email-already-in-use")){
+        if(e.message.includes('auth/email-already-in-use')){
           setEmailErrorStatus({'status': true, 'message': 'This email is already in use'})
         }
       }
       if (e instanceof Error) {
         if (e.message === 'Password-is-not-matching') {
-          setPasswordConfirmErrorStatus({'status': true, 'message': "Passwords doesn't match"})
+          setPasswordConfirmErrorStatus({'status': true, 'message': `Passwords doesn't match`})
         }
       }
     }
-  };
+  }
 
   function passwordOnChangeHandler() {
-    const passwordVal: string | undefined = passwordRef.current?.value;
-    const passwordConfirmVal: string | undefined = passwordConfirmRef.current?.value;
+    const passwordVal: string | undefined = passwordRef.current?.value
+    const passwordConfirmVal: string | undefined = passwordConfirmRef.current?.value
     if (passwordVal !== '') {
       setPasswordErrorStatus({'status': false, 'message': ''})
     }
@@ -120,7 +120,7 @@ export default function SignUp() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="sm">
+      <Container component='main' maxWidth='sm'>
         <CssBaseline />
         <Box
           sx={{
@@ -130,12 +130,12 @@ export default function SignUp() {
             alignItems: 'center',
           }}
         >
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Box sx={{marginBottom: '40px'}}>
-              <Typography component="h1" variant="h4" align='left' sx={{width: '100%', marginBottom: '8px'}}>
+              <Typography component='h1' variant='h4' align='left' sx={{width: '100%', marginBottom: '8px'}}>
                 Get started absolutely free.
               </Typography>
-              <Typography variant="body2" align='left' sx={{width: '100%'}}>
+              <Typography variant='body2' align='left' sx={{width: '100%'}}>
                 Free forever. No credit card needed.
               </Typography>
             </Box>
@@ -143,12 +143,12 @@ export default function SignUp() {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  autoComplete="given-name"
-                  name="firstName"
+                  autoComplete='given-name'
+                  name='firstName'
                   required
                   fullWidth
-                  id="firstName"
-                  label="First Name"
+                  id='firstName'
+                  label='First Name'
                   autoFocus
                   inputRef={firstnameRef}
                   error={firstnameErrorStatus.status}
@@ -160,10 +160,10 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="surname-name"
+                  id='lastName'
+                  label='Last Name'
+                  name='lastName'
+                  autoComplete='surname-name'
                   inputRef={lastnameRef}
                   error={lastnameErrorStatus.status}
                   onChange={ (event) => event.target.value !== '' ? setlastnameErrorStatus({'status': false, 'message': ''}) : undefined}
@@ -174,10 +174,10 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
+                  id='email'
+                  label='Email Address'
+                  name='email'
+                  autoComplete='email'
                   inputRef={emailRef}
                   error={emailErrorStatus.status}
                   onChange={ (event) => event.target.value !== '' ? setEmailErrorStatus({'status': false, 'message': ''}) : undefined}
@@ -188,11 +188,11 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
+                  name='password'
+                  label='Password'
+                  type='password'
+                  id='password'
+                  autoComplete='new-password'
                   inputRef={passwordRef}
                   error={passwordErrorStatus.status}
                   onChange={passwordOnChangeHandler}
@@ -203,11 +203,11 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  name="password"
-                  label="Confirm Password"
-                  type="password"
-                  id="confirm-password"
-                  autoComplete="confirm-password"
+                  name='password'
+                  label='Confirm Password'
+                  type='password'
+                  id='confirm-password'
+                  autoComplete='confirm-password'
                   inputRef={passwordConfirmRef}
                   error={passwordConfirmErrorStatus.status}
                   onChange={passwordOnChangeHandler}
@@ -216,17 +216,17 @@ export default function SignUp() {
               </Grid>
             </Grid>
             <Button
-              type="submit"
+              type='submit'
               fullWidth
-              variant="contained"
+              variant='contained'
               sx={{ mt: 3, mb: 2 }}
             >
               Sign Up
             </Button>
-            <Grid container justifyContent="flex-end">
+            <Grid container justifyContent='flex-end'>
               <Grid item>
                 <Link to={ROUTES.SIGN_IN}>
-                  <Typography variant="body2" color='primary'>
+                  <Typography variant='body2' color='primary'>
                     Already have an account? Sign in
                   </Typography>
                 </Link>
@@ -237,5 +237,5 @@ export default function SignUp() {
         <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
-  );
+  )
 }
