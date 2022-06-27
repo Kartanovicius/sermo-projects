@@ -1,14 +1,21 @@
-// Material-ui
-import { ListItemText, ListItemButton, List, ListSubheader, Divider, Button, Box, Alert } from '@mui/material'
-import { DocumentData } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { useDialog } from 'react-dialog-async'
-import { useAuth } from '../../context/authContext'
+// Material-ui
+import { ListItemText, ListItemButton, List, ListSubheader, Divider, Button, Box } from '@mui/material'
+// Firebase
+import { DocumentData } from 'firebase/firestore'
 import { getUserProjects } from '../../services/firebase'
+// Contexts
+import { useAuth } from '../../context/authContext'
 // npm packages
+import { useDialog } from 'react-dialog-async'
+import { useNavigate } from 'react-router-dom'
+// Components
 import { CreateProjectDialog } from './CreateProjectDialog'
+// Constants
+import * as ROUTES from '../../constants/routes'
 
 function ProjectsContent() {
+  const navigate = useNavigate()
   // Create project
   const createProjectDialog = useDialog(CreateProjectDialog)
   const [newProjectCreted, setNewProjectCreted] = useState(false)
@@ -54,7 +61,7 @@ function ProjectsContent() {
       }>
         <Divider/>
           {[...projectList].map(project => (
-            <ListItemButton component='div' key={project.code}>
+            <ListItemButton component='div' key={project.code} onClick={(e: any) => navigate(ROUTES.PROJECT + project.code)}>
               <ListItemText primary={`${project.code} - ${project.client} - ${project.name}`}/>
             </ListItemButton>
           ))}
