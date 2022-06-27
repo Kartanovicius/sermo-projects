@@ -28,18 +28,17 @@ export const ChangePasswordDialog: React.FC<AsyncDialogProps<string, { message: 
       currentUser.email,
       previousPassword
     )
-    await reauthenticateWithCredential(currentUser, credential)
-
-    await updatePassword(currentUser, newPassword).then(() => {
+    try {
+      await reauthenticateWithCredential(currentUser, credential)
+      await updatePassword(currentUser, newPassword)
       handleClose([{message: ALERTMESSAGE.PASSWORD_UPDATED, variant: 'success'}])
-      // Update successful.
-    }).catch((error) => {
+    } catch (error) {
       if (error instanceof FirebaseError) {
         if(error.message.includes('auth/wrong-password')) {
           handleClose([{message: ALERTMESSAGE.INVALID_PASSWORD, variant: 'error'}])
         }
       }
-    })
+    }
   }
 
   return (
