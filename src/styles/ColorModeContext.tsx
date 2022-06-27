@@ -9,7 +9,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
       ? {
           // palette values for light mode
           primary: {
-            light: '#f4f9fc',
+            light: '#4693ff',
             main: '#056DFF',
             contrastText: '#fafafa',
           },
@@ -86,23 +86,47 @@ const getDesignTokens = (mode: PaletteMode) => ({
           '&:focus': {
             backgroundColor: 'transparent',
           },
+          '&.Mui-error': {
+            input: {
+              '&:hover': {
+                boxShadow: `${alpha(mode === 'light' ? '#ffd7d8' : '#B65757', 0.25)} 0 0 0 2px`,
+                borderColor: mode === 'light' ? '#ffd7d8' : '#B65757',
+              },
+              '&:focus': {
+                boxShadow: `${alpha(mode === 'light' ? '#ffd7d8' : '#B65757', 0.25)} 0 0 0 2px`,
+              },
+              '&:-webkit-autofill': {
+                WebkitBoxShadow: `0 0 0 100px ${mode === 'light' ? '#fff' : '#34384a'} inset`,
+              },
+            },
+          },
+          'input[type=number]::-webkit-inner-spin-button': {
+            WebkitAppearance: 'none', 
+            margin: 0,
+          },
+          'input[type=number]::-webkit-outer-spin-button': {
+            WebkitAppearance: 'none', 
+            margin: 0,
+          },
         },
         input: {
           border: '1px solid #e2e2e1',
           overflow: 'hidden',
           borderRadius: 4,
           backgroundColor: 'transparent',
-          '&& .MuiInput-root:hover::before': {
-            borderColor: 'red',
+          select: {
+            '&$focused': {
+              fill: mode === 'light' ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)',
+            },
           },
           '&:hover': {
-            boxShadow: `${alpha(mode === 'light' ? '#f4f9fc' : '#3ea3fe', 0.25)} 0 0 0 2px`,
-            borderColor: mode === 'light' ? '#f4f9fc' : '#3ea3fe',
+            boxShadow: `${alpha(mode === 'light' ? '#4693ff' : '#3ea3fe', 0.25)} 0 0 0 2px`,
+            borderColor: mode === 'light' ? '#4693ff' : '#3ea3fe',
           },
           '&:focus': {
             backgroundColor: 'transparent',
-            boxShadow: `${alpha(mode === 'light' ? '#f4f9fc' : '#3ea3fe', 0.25)} 0 0 0 2px`,
-            borderColor: mode === 'light' ? '#f4f9fc' : '#3ea3fe',
+            boxShadow: `${alpha(mode === 'light' ? '#4693ff' : '#3ea3fe', 0.25)} 0 0 0 2px`,
+            borderColor: mode === 'light' ? '#4693ff' : '#3ea3fe',
           },
           '&:-webkit-autofill': {
             WebkitBoxShadow: `0 0 0 100px ${mode === 'light' ? '#fff' : '#34384a'} inset`,
@@ -120,6 +144,9 @@ const getDesignTokens = (mode: PaletteMode) => ({
             borderBottomColor: 'transparent',
           },
           '&:focus:not(.Mui-disabled)::after': {
+            borderBottomColor: 'transparent',
+          },
+          '&.Mui-error:after': {
             borderBottomColor: 'transparent',
           },
         },

@@ -8,24 +8,38 @@ import { AsyncDialogProps } from 'react-dialog-async'
 import { useAuth } from '../../context/authContext'
 // constants
 import { createProject } from '../../services/firebase'
+import * as ALERTS from '../../constants/alerts'
+
 
 export const CreateProjectDialog: React.FC<AsyncDialogProps<string, string>> = 
 ({ open, handleClose, data }) => {
-
+  
+  // Context variable
   const { currentUser } = useAuth()
+
+  // Form
   const [code, setCode] = useState<number>(0)
   const [client, setClient] = useState<string>('')
   const [name, setName] = useState<string>('')
 
+  // Validation
+  const [codeAlreadyExist, setCodeAlreadyExist] = useState<boolean>(false)
+
+  // On initializing dialog clear all fields ('Implemented for button disable')
   useEffect(() => {
     setCode(0)
     setClient('')
     setName('')
   }, [open])
 
-  function createProjectHandler() {
-    createProject(currentUser.uid, code, client, name)
-    handleClose()
+
+  async function createProjectHandler() {
+    try {
+      await createProject(currentUser.uid, code, client, name)
+      handleClose()
+    } catch (error) {
+      setCodeAlreadyExist(true)
+    }
   }
 
   return (
@@ -38,11 +52,17 @@ export const CreateProjectDialog: React.FC<AsyncDialogProps<string, string>> =
           margin='dense'
           id='code'
           label='Project code'
-          type='tel'
+          type='number'
           fullWidth
           variant='filled'
           required
-          onChange={e => setCode(parseInt(e.target.value))}
+          error={codeAlreadyExist}
+          helperText={codeAlreadyExist ? ALERTS.PROJECT_CODE_ALREADY_EXISTS : ''}
+          onChange={e => {
+            setCode(parseInt(e.target.value))
+            setCodeAlreadyExist(false)
+          }
+          }
         />
         <TextField
           margin='dense'
@@ -68,7 +88,7 @@ export const CreateProjectDialog: React.FC<AsyncDialogProps<string, string>> =
       <DialogActions sx={{ px: 3, pb: 2 }}>
         <Button variant='outlined' onClick={() => handleClose()}>Cancel</Button>
         <Button variant='contained' 
-          disabled={code < 100000 || client.length === 0 || name.length === 0} 
+          disabled={code.toString().length !== 6 || client.length === 0 || name.length === 0} 
           onClick={() => {createProjectHandler()}}
         >
           Create

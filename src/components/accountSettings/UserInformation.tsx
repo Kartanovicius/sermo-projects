@@ -38,12 +38,9 @@ export default function UserInformation({setAlerts}: Props) {
   async function updateFirstName() {
     try {
       await updateFieldByUserId(currentUser.uid, {first: userFirstRef.current.value})
-      .then(res => {
-        if (res.status === 'fulfilled') {
-          alertMessage.push({message: ALERTMESSAGE.FIRST_NAME_UPDATED, variant: 'success'})
-        }
-      })
-    } catch (error) {
+      alertMessage.push({message: ALERTMESSAGE.FIRST_NAME_UPDATED, variant: 'success'})
+    } 
+    catch (error) {
       console.log(error)
     }
 
@@ -52,39 +49,33 @@ export default function UserInformation({setAlerts}: Props) {
   async function updateLastName() {
     try {
       await updateFieldByUserId(currentUser.uid, {last: userLastRef.current.value})
-      .then(res => {
-        if (res.status === 'fulfilled') {
-          alertMessage.push({message: ALERTMESSAGE.LAST_NAME_UPDATED, variant: 'success'})
-        }
-      })
-    } catch (error) {
+      alertMessage.push({message: ALERTMESSAGE.LAST_NAME_UPDATED, variant: 'success'})
+    }
+    catch (error) {
       console.log(error)
     }
   }
 
   async function updateEmailAddress() {
-    await passwordConfirmationDialog.show('To change email address for current user, please enter your current password here.')
-    .then(password => {
-      return EmailAuthProvider.credential(
-        currentUser.email,
-        password !== undefined ? password : ''
-      )
-    })
-    .then(credential => {
-      return reauthenticateWithCredential(currentUser, credential)
-    })
-    .then(() => {
-      updateEmail(currentUser, userEmailAddressRef.current.value)
-    })
-    .then(() => {
-      updateFieldByUserId(currentUser.uid, {emailAddress: userEmailAddressRef.current.value})
-      .then(res => {
-        if (res.status === 'fulfilled') {
-          alertMessage.push({message: ALERTMESSAGE.EMAIL_ADDRESS_UPDATED, variant: 'success'})
-        }
+    try {
+      await passwordConfirmationDialog.show('To change email address for current user, please enter your current password here.')
+      .then(password => {
+        return EmailAuthProvider.credential(
+          currentUser.email,
+          password !== undefined ? password : ''
+        )
       })
-    })
-    .catch((error) => {
+      .then(credential => {
+        return reauthenticateWithCredential(currentUser, credential)
+      })
+
+      await updateEmail(currentUser, userEmailAddressRef.current.value)
+
+      await updateFieldByUserId(currentUser.uid, {emailAddress: userEmailAddressRef.current.value})
+
+      alertMessage.push({message: ALERTMESSAGE.EMAIL_ADDRESS_UPDATED, variant: 'success'})
+    }
+    catch(error) {
       if (error instanceof FirebaseError) {
         if(error.message.includes('auth/internal-error')) {
           return alertMessage.push({message: ALERTMESSAGE.UNFINISHED_DIALOG, variant: 'error'})
@@ -93,7 +84,7 @@ export default function UserInformation({setAlerts}: Props) {
           return alertMessage.push({message: ALERTMESSAGE.INVALID_PASSWORD, variant: 'error'})
         }
       }
-    })
+    }
   }
 
   const saveUserInfoHandler = async () => {
