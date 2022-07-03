@@ -6,7 +6,6 @@ import Navigation from '../components/main/Navigation'
 // react-router-dom
 import { Outlet } from 'react-router-dom'
 // Contexts
-import WeatherProvider from '../context/weatherContext'
 import CurrentUserProvider from '../context/currentUserContext'
 import { DialogProvider } from 'react-dialog-async'
 
@@ -14,25 +13,23 @@ export default function Main() {
   
   return (
     <CurrentUserProvider>
-      <WeatherProvider>
-        <DialogProvider>
-          <Box sx={{ display: 'flex' }}>
-            <CssBaseline />
-            <Navigation />
-            <Box
-            component='main'
-            sx={{
-              flexGrow: 1,
-              height: '100vh',
-              overflow: 'auto',
-            }}
-            >
-              <Toolbar />
-              <Outlet />
-            </Box>
+      <DialogProvider>
+        <Box sx={{ display: 'flex' }}>
+          <CssBaseline />
+          <Navigation />
+          <Box
+          component='main'
+          sx={{
+            flexGrow: 1,
+            height: '100vh',
+            overflow: 'auto',
+          }}
+          >
+            <Toolbar />
+            <Outlet />
           </Box>
-        </DialogProvider>
-      </WeatherProvider>
+        </Box>
+      </DialogProvider>
     </CurrentUserProvider>
   )
 }

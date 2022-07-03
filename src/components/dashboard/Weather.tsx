@@ -22,7 +22,7 @@ const Link = styled(Paper)(({ theme }) => ({
 export default function Weather() {
   const cityRef = useRef<HTMLInputElement | null>(null)
   const [location, setLocation] = usePersistentStorageValue('location', '')
-  const [skip, setSkip] = useState(location !== '""' ? true : false)
+  const [skip, setSkip] = useState(location === '' ? true : false)
 
   const { data, error, isLoading } = useGetWeatherQuery(location, {skip})
 
@@ -50,12 +50,12 @@ export default function Weather() {
         JSON.stringify(error).includes('"code":1003') ? 'City must have a value' :
         JSON.stringify(error).includes('"code":1006') ? 'No matching location found' : ''
        }</Alert>}
-       {(location === '""' || error) && 
+       {(location === '' || error) && 
         <>
           <TextField fullWidth 
             id='city' 
             label='City'
-            variant='outlined' 
+            variant='filled' 
             type='text'
             sx={{marginBottom: '16px'}}
             inputRef={cityRef}
