@@ -37,7 +37,7 @@ export default function UserInformation({setAlerts}: Props) {
 
   async function updateFirstName() {
     try {
-      await updateFieldByUserId(currentUser.uid, {first: userFirstRef.current.value})
+      await updateFieldByUserId(currentUser.uid, {name: userFirstRef.current.value})
       alertMessage.push({message: ALERTMESSAGE.FIRST_NAME_UPDATED, variant: 'success'})
     } 
     catch (error) {
@@ -48,7 +48,7 @@ export default function UserInformation({setAlerts}: Props) {
 
   async function updateLastName() {
     try {
-      await updateFieldByUserId(currentUser.uid, {last: userLastRef.current.value})
+      await updateFieldByUserId(currentUser.uid, {surname: userLastRef.current.value})
       alertMessage.push({message: ALERTMESSAGE.LAST_NAME_UPDATED, variant: 'success'})
     }
     catch (error) {

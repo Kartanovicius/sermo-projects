@@ -16,6 +16,7 @@
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.4",
     "axios": "^0.27.2",
+    "dateformat": "^5.0.3",
     "firebase": "^9.8.1",
     "react": "^18.1.0",
     "react-dialog-async": "^1.1.1",
@@ -51,5 +52,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/dateformat": "^5.0.0"
   }
 }

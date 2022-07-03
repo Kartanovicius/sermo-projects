@@ -1,13 +1,10 @@
 import React, { } from 'react'
 // Material-ui
-import { Container} from '@mui/material'
+import { Outlet } from 'react-router-dom'
 
 function ProjectContent() {
-
   return (
-    <Container maxWidth='lg'>
-      Project
-    </Container>
+    <Outlet />
   )
 }
 

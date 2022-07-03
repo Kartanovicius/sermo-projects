@@ -6,6 +6,7 @@ import ColorModeProvider from './styles/ColorModeContext'
 import Dashboard from './pages/Dashboard'
 import Profile from './pages/AccountSettings'
 import Project from './pages/Project'
+import ProjectMain from './pages/ProjectMain'
 // react-router-dom
 import { Route, Routes } from 'react-router-dom'
 import ProtectedRoute, { ProtectedRouteProps } from './helpers/protected-route'
@@ -64,9 +65,10 @@ function App() {
             />
           }>
             <Route path={ROUTES.MAIN} element={<Dashboard />}/>
-            <Route path={ROUTES.ACCOUNTSETTINGS+':userid'} element={<Profile />}/>
-            <Route path={ROUTES.ACCOUNTSETTINGS+':userid'} element={<Profile />}/>
-            <Route path={ROUTES.PROJECT+':projectid'} element={<Project />}/>
+            <Route path={ROUTES.ACCOUNTSETTINGS} element={<Profile />}/>
+            <Route path={ROUTES.PROJECT+':project_code'} element={<Project />}>
+              <Route path={ROUTES.PROJECT+':project_code'} element={<ProjectMain />}/>
+            </Route>
           </Route>
 
           <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />

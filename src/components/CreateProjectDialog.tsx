@@ -5,10 +5,11 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, T
 import { AsyncDialogProps } from 'react-dialog-async'
 // Firebase
 // contexts
-import { useAuth } from '../../context/authContext'
+import { useAuth } from '../context/authContext'
 // constants
-import { createProject } from '../../services/firebase'
-import * as ALERTS from '../../constants/alerts'
+import { createProject } from '../services/firebase'
+import * as ALERTS from '../constants/alerts'
+import { IProject } from '../types'
 
 
 export const CreateProjectDialog: React.FC<AsyncDialogProps<string, string>> = 
@@ -35,7 +36,14 @@ export const CreateProjectDialog: React.FC<AsyncDialogProps<string, string>> =
 
   async function createProjectHandler() {
     try {
-      await createProject(currentUser.uid, code, client, name)
+      const project: IProject = {
+        owner: currentUser.uid,
+        code: code,
+        client: client,
+        name: name,
+        dateCreated: Date.now()
+      }
+      await createProject(project)
       handleClose()
     } catch (error) {
       setCodeAlreadyExist(true)

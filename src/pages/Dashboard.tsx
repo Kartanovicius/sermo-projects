@@ -11,7 +11,7 @@ function DashboardContent() {
   const { userEmailAddress } = useCurrentUser()
   
   return (
-    <Container maxWidth='lg' sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth='lg' sx={{ mt: 4 }}>
       <Typography style={{fontWeight:'700'}} sx={{ typography: { sm: 'h4', xs: 'h6' } }}>
         {userEmailAddress === undefined ? <Skeleton/> : `Hello there, ${userEmailAddress}`}
       </Typography>

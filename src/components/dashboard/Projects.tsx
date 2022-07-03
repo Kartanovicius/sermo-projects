@@ -10,7 +10,7 @@ import { useAuth } from '../../context/authContext'
 import { useDialog } from 'react-dialog-async'
 import { useNavigate } from 'react-router-dom'
 // Components
-import { CreateProjectDialog } from './CreateProjectDialog'
+import { CreateProjectDialog } from '../CreateProjectDialog'
 // Constants
 import * as ROUTES from '../../constants/routes'
 

@@ -19,6 +19,7 @@ import {
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 //Components
 import Copyright from '../components/Copyright'
+import { IUser } from '../types'
 
 const theme = createTheme()
 
@@ -47,9 +48,12 @@ export default function SignUp() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const nameVal: string | undefined = firstnameRef.current?.value
-    const lastnameVal: string | undefined = lastnameRef.current?.value
-    const emailVal: string | undefined = emailRef.current?.value
+    if (firstnameRef.current === undefined || lastnameRef.current === undefined || emailRef.current === undefined) {
+      throw new Error('undefined-ref')
+    }
+    const nameVal: string = firstnameRef.current.value
+    const lastnameVal: string = lastnameRef.current.value
+    const emailVal: string = emailRef.current.value
     const passwordVal: string | undefined = passwordRef.current?.value
     const passwordConfirmVal: string | undefined = passwordConfirmRef.current?.value
 
@@ -79,14 +83,16 @@ export default function SignUp() {
       // Firebase auth
       const createdUserResult = await createUser(emailRef.current?.value, passwordRef.current?.value)
 
-      await addDoc(collection(db, 'users'), {
+      const user: IUser = {
         uid: createdUserResult.user.uid,
-        first: nameVal,
-        last: lastnameVal,
+        name: nameVal,
+        surname: lastnameVal,
         emailAddress: emailVal,
         projects: [],
         dateCreated: Date.now(),
-      })
+      }
+
+      await addDoc(collection(db, 'users'), user)
       
       navigate(ROUTES.MAIN)
     } catch (e) {

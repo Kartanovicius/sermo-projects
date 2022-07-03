@@ -22,9 +22,11 @@ function AccountSettingsContent() {
 
   return (
     <Container maxWidth='lg'>
-      <Container sx={{ mt: 4, mb: 4, minHeight: `calc(100vh - 64px - 64px - 68px)` }} disableGutters>
+      <Container sx={{ mt: 4 }} disableGutters>
       {alertsList}
-      <Typography style={{ fontWeight: 'bold', marginBottom: 16 }} variant='h4'>{userLoading ? <Skeleton /> : `${userFirst} ${userLast}`}</Typography>
+      <Typography style={{ fontWeight: 'bold', marginBottom: 16 }} variant='h4'>
+        {userLoading ? <Skeleton /> : `${userFirst} ${userLast}`}
+      </Typography>
       <Grid container spacing={3}>
         <UserInformation setAlerts={setAlerts}/>
         <ChangePassword setAlerts={setAlerts}/>
