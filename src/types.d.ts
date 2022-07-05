@@ -3,7 +3,7 @@ export interface IProject {
   code: number | null,
   client: string,
   name: string,
-  notes?: [],
+  note?: string,
   recurringTasks?: [],
   dateCreated: number,
 }

@@ -22,7 +22,7 @@ function AccountSettingsContent() {
 
   return (
     <Container maxWidth='lg'>
-      <Container sx={{ mt: 4 }} disableGutters>
+      <Container sx={{ my: 4 }} disableGutters>
       {alertsList}
       <Typography style={{ fontWeight: 'bold', marginBottom: 16 }} variant='h4'>
         {userLoading ? <Skeleton /> : `${userFirst} ${userLast}`}

@@ -61,3 +61,12 @@ export async function getProjectByCode(code: number) {
   const querySnapshot = await getDocs(q)
   return querySnapshot.docs[0].data() as IProject
 }
+
+export async function updateProjectByCode(code: number, newValue: {note?: string}) {
+  const userRef = collection(db, 'projects')
+
+  const q = query(userRef, where('code', '==', code))
+
+  const querySnapshot = await getDocs(q)
+  updateDoc(querySnapshot.docs[0].ref, newValue)
+}

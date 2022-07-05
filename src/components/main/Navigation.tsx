@@ -102,6 +102,7 @@ export default function Navigation() {
       <Toolbar
           sx={{
             pr: '24px', // keep right padding when drawer closed
+            pl: '28px!important',
             justifyContent: 'space-between'
           }}
         >
@@ -110,7 +111,7 @@ export default function Navigation() {
             aria-label='open drawer'
             onClick={toggleDrawer}
             sx={{
-              marginRight: '36px',
+              marginRight: '10px',
               ...(open && { visibility: 'hidden' }),
             }}
           >
