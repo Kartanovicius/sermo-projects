@@ -47,7 +47,10 @@ export default function Credentials({projectUser, project}: Props) {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          p: 3,
+          p: {
+            xs: 2,
+            sm: 3
+          },
         }}
         >
           <Typography variant='h6' sx={{ mb: 1 }}>

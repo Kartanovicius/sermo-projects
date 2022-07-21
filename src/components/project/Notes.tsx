@@ -10,11 +10,10 @@ interface Props {
 export default function Notes ({project}: Props) {
   const textInputRef = useRef<HTMLInputElement>()
 
-  function saveButonHandler() {
-    if (project.code) {
-      updateProjectByCode(project.code, {note: textInputRef.current?.value})
+  function saveButtonHandler() {
+    if (project.code && textInputRef.current !== undefined) {
+      updateProjectByCode(project.code, {note: textInputRef.current.value})
     }
-    console.log('a')
   }
 
   return (
@@ -23,7 +22,10 @@ export default function Notes ({project}: Props) {
         <Card sx={{
           display: 'flex',
           flexDirection: 'column',
-          p: 3,
+          p: {
+            xs: 2,
+            sm: 3,
+          },
           gap: 1,
         }}>
           <Typography variant='h6'>
@@ -34,6 +36,8 @@ export default function Notes ({project}: Props) {
           placeholder='Add any important note for this project'
           fullWidth
           multiline
+          variant='filled'
+          sx={{ MuiFilledInput: { root: { p: '18px 18px 8px' } }}}
           maxRows={10}
           defaultValue={project.note}
           inputRef={textInputRef}
@@ -46,7 +50,7 @@ export default function Notes ({project}: Props) {
             id='save-notes-btn'
             variant='contained'
             sx={{ mt: 2 }}
-            onClick={() => saveButonHandler()}
+            onClick={() => saveButtonHandler()}
             >
               Save Note
             </Button>

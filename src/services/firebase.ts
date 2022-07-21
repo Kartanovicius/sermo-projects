@@ -62,7 +62,13 @@ export async function getProjectByCode(code: number) {
   return querySnapshot.docs[0].data() as IProject
 }
 
-export async function updateProjectByCode(code: number, newValue: {note?: string}) {
+export async function updateProjectByCode(
+  code: number, 
+  newValue: {
+    note?: IProject['note'], 
+    recurringTasks?: IProject['recurringTasks'],
+  }
+  ) {
   const userRef = collection(db, 'projects')
 
   const q = query(userRef, where('code', '==', code))

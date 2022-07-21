@@ -41,11 +41,12 @@ export const CreateProjectDialog: React.FC<AsyncDialogProps<string, string>> =
         code: code,
         client: client,
         name: name,
-        dateCreated: Date.now()
+        dateCreated: Date.now(),
       }
       await createProject(project)
       handleClose()
     } catch (error) {
+      console.log(error)
       setCodeAlreadyExist(true)
     }
   }
