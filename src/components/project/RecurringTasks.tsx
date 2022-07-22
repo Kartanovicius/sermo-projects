@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 // Material-UI
-import { Skeleton, Card, Typography, TextField, Box, Button } from '@mui/material'
+import { Skeleton, Card, Typography, TextField, Box, Button, IconButton, Tooltip } from '@mui/material'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 // Firebase
 import { updateProjectByCode } from '../../services/firebase'
 // Custom hooks
@@ -11,6 +12,7 @@ import moment from 'moment'
 import { IProject } from '../../types'
 // Components
 import RecurringTasksTable from './RecurringTasksTable'
+import { AddBox } from '@mui/icons-material';
 
 interface Props {
   project: IProject
@@ -81,9 +83,19 @@ export default function RecurringTasks ({ project }: Props) {
           },
           gap: 1,
         }}>
-          <Typography variant='h6'>
-            Recurring Tasks
-          </Typography>
+          <Box sx={{
+            display: 'inline-flex',
+            justifyContent: 'space-between',
+          }}>
+            <Typography variant='h6'>
+              Recurring Tasks
+            </Typography>
+            <Tooltip disableFocusListener title="Checkbox will automatically deselect every 24h on selected time">
+              <IconButton>
+                <InfoOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
           <Box sx={{
             display: 'inline-flex',
             flexDirection: {
