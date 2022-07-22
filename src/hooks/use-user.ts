@@ -3,14 +3,7 @@ import { getUserByUserId } from '../services/firebase'
 import { IUser } from '../types'
 
 export default function useUser(uId: string) {
-  const [activeUser, setActiveUser] = useState<IUser>({
-    uid: '',
-    name: '',
-    surname: '',
-    emailAddress: '',
-    projects: [],
-    dateCreated: 0,
-  })
+  const [activeUser, setActiveUser] = useState<IUser | undefined>()
 
   useEffect(() => {
     async function getUserObjByUserId(uId: string) {

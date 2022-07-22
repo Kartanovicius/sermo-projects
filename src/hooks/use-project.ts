@@ -4,14 +4,7 @@ import { IProject } from '../types';
 
 export default function useProject(code: number) {
   const [reload, setReload] = useState(false)
-  const [currentProject, setCurrentProject] = useState<IProject>({
-    owner: '',
-    code: null,
-    client: '',
-    name: '',
-    recurringTasks: [],
-    dateCreated: 0
-  })
+  const [currentProject, setCurrentProject] = useState<IProject | undefined>()
 
   useEffect(() => {
     async function GetProjectByCode(code: number) {
