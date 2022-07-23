@@ -112,8 +112,8 @@ export default function RecurringTasks ({ project }: Props) {
     <>
       {code === null ? <Skeleton height={350}/> :
         <Card sx={{
-          display: 'flex',
-          flexDirection: 'column',
+          display: "flex",
+          flexDirection: "column",
           p: {
             xs: 2,
             sm: 3,
@@ -121,10 +121,10 @@ export default function RecurringTasks ({ project }: Props) {
           gap: 1,
         }}>
           <Box sx={{
-            display: 'inline-flex',
-            justifyContent: 'space-between',
+            display: "inline-flex",
+            justifyContent: "space-between",
           }}>
-            <Typography variant='h6'>
+            <Typography variant="h6">
               Recurring Tasks
             </Typography>
             <Tooltip disableFocusListener title="Checkbox will automatically deselect every 24h on selected time">
@@ -134,35 +134,35 @@ export default function RecurringTasks ({ project }: Props) {
             </Tooltip>
           </Box>
           <Box sx={{
-            display: 'inline-flex',
+            display: "inline-flex",
             flexDirection: {
-              xs: 'column',
-              sm: 'row',
+              xs: "column",
+              sm: "row",
             },
             gap: 2,
-            '.MuiTextField-root': {
-              '&:nth-of-type(1)': {
+            ".MuiTextField-root": {
+              "&:nth-of-type(1)": {
                 width: {
-                  xs: '100%',
-                  sm: '70%',
+                  xs: "100%",
+                  sm: "70%",
                 }
               },
               width: {
-                xs: '100%',
-                sm: '30%',
+                xs: "100%",
+                sm: "30%",
               }
             }
           }}>
             <TextField
-              id='task-text-input'
-              label='Task'
-              variant='filled'
+              id="task-text-input"
+              label="Task"
+              variant="filled"
               inputRef={taskTextRef}
             />
             <TextField 
-              id='task-time-input'
-              label='Repeat at'
-              variant='filled'
+              id="task-time-input"
+              label="Repeat at"
+              variant="filled"
               type="time"
               defaultValue="07:30"
               InputLabelProps={{
@@ -176,12 +176,12 @@ export default function RecurringTasks ({ project }: Props) {
             />
           </Box>
           <Box sx={{
-            display: 'flex',
-            justifyContent: 'end',
+            display: "flex",
+            justifyContent: "end",
           }}>
             <Button
-            id='display-list-btn'
-            variant='text'
+            id="display-list-btn"
+            variant="text"
             sx={{ mt: 2, mr: 1 }}
             disabled={recurringTasksList.length === 0}
             onClick={() => openListHandler()}
@@ -189,8 +189,8 @@ export default function RecurringTasks ({ project }: Props) {
               Show Tasks
             </Button>
             <Button
-            id='add-item-to-list-btn'
-            variant='contained'
+            id="add-item-to-list-btn"
+            variant="contained"
             sx={{ mt: 2 }}
             onClick={() => createRecurringTaskButtonHandler()}
             >

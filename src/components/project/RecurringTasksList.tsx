@@ -24,8 +24,8 @@ export default function RecurringTasksList ({recurringTasksList, open, code, del
     const hour = moment(milli).toObject().hours
     const minute = moment(milli).toObject().minutes
 
-    const formatedHour = ("0" + hour).slice(-2)
-    const formatedMinute = ("0" + minute).slice(-2)
+    const formatedHour = ('0' + hour).slice(-2)
+    const formatedMinute = ('0' + minute).slice(-2)
 
     return `${formatedHour}:${formatedMinute}`
   }
@@ -45,7 +45,7 @@ export default function RecurringTasksList ({recurringTasksList, open, code, del
               checked={item.done}
               tabIndex={-1}
               disableRipple
-              inputProps={{ 'aria-labelledby': item.task }}
+              inputProps={{ "aria-labelledby": item.task }}
             />
           </ListItemIcon>
         <ListItemText 
