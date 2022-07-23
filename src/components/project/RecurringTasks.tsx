@@ -183,6 +183,7 @@ export default function RecurringTasks ({ project }: Props) {
             id='display-list-btn'
             variant='text'
             sx={{ mt: 2, mr: 1 }}
+            disabled={recurringTasksList.length === 0}
             onClick={() => openListHandler()}
             >
               Show Tasks
