@@ -41,6 +41,8 @@ export const CreateProjectDialog: React.FC<AsyncDialogProps<string, string>> =
         code: code,
         client: client,
         name: name,
+        note: '',
+        recurringTasks: [],
         dateCreated: Date.now(),
       }
       await createProject(project)

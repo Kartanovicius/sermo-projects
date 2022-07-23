@@ -1,33 +1,32 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 // Material-UI
 import { Skeleton, Card, Typography, TextField, Box, Button, IconButton, Tooltip } from '@mui/material'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 // Firebase
 import { updateProjectByCode } from '../../services/firebase'
-// Custom hooks
-import useProject from '../../hooks/use-project'
 // npm packages
 import moment from 'moment'
 // Types
-import { IProject } from '../../types'
+import { IProject, IRecurringTask } from '../../types'
 // Components
-import RecurringTasksTable from './RecurringTasksTable'
-import { AddBox } from '@mui/icons-material';
+import RecurringTasksList from './RecurringTasksList'
 
 interface Props {
   project: IProject
 }
 
 export default function RecurringTasks ({ project }: Props) {
+  const { code, recurringTasks } = project
+
   const taskTextRef = useRef<HTMLInputElement>()
   const taskTimeRef = useRef<HTMLInputElement>()
-  const { setReload } = useProject(Number(project.code))
+  const [recurringTasksList, setRecurringTasksList] = useState<IProject['recurringTasks']>(recurringTasks)
 
-  const [openTable, setOpenTable] = useState(false)
+  const [openList, setOpenList] = useState(false)
 
-  async function createRecurringTaskButtonHandler() {
+  const createRecurringTaskButtonHandler = async () => {
     if (
-      project.code && 
+      code && 
       taskTextRef.current !== undefined && 
       taskTimeRef.current !== undefined &&
       taskTextRef.current.value !== '' &&
@@ -43,37 +42,75 @@ export default function RecurringTasks ({ project }: Props) {
         time: time,
         done: true
       }
-      // Push new task to project.recurringTasks if it exist
+      // Push new task to recurringTasks if it exist
       // If recurringTasks does not exist then create a new array with recurringTask
-      project.recurringTasks !== undefined ? 
-      project.recurringTasks.push(recurringTask) :
-      project.recurringTasks = [recurringTask]
+      let newRecurringTasks = [...recurringTasksList]
+      newRecurringTasks !== undefined ? 
+      newRecurringTasks.push(recurringTask) :
+      newRecurringTasks = [recurringTask]
       // Push new task to Firestore
       try {  
         await updateProjectByCode(
-          project.code, 
-          { recurringTasks: project.recurringTasks }
+          code, 
+          { recurringTasks: newRecurringTasks }
         )
         // Clear input fields
         taskTextRef.current.value = ''
         taskTimeRef.current.value = ''
-        setReload(true)
+
+        setRecurringTasksList(newRecurringTasks)
       } catch (error) {
         console.log(error)
       }
     }
   }
 
+  const deleteHandler = (code: number, index: number) => {
+    let newRecurringTasks = [...recurringTasksList]
+    newRecurringTasks.splice(index, 1)
+    updateProjectByCode(code, { recurringTasks: newRecurringTasks })
+    .then(() => setRecurringTasksList(newRecurringTasks))
+  }
+
+  const doneCheckboxHandler = (code: number, item: IRecurringTask, index: number) => {
+    let newRecurringTasks = [...recurringTasksList]
+    newRecurringTasks[index]['done'] = !item.done
+    updateProjectByCode(code, { recurringTasks: newRecurringTasks })
+    .then(() => setRecurringTasksList(newRecurringTasks))
+  }
+
   // Open table if recurringTasks exist and if it has any items
-  function openTableHandler() {
-    if (project.recurringTasks !== undefined && project.recurringTasks.length > 0) {
-      setOpenTable(!openTable)
+  function openListHandler() {
+    if (recurringTasksList !== undefined && recurringTasksList.length > 0) {
+      setOpenList(!openList)
     }
   }
 
+  useEffect(() => {
+    if (recurringTasksList.length === 0) {
+      setOpenList(false)
+    }
+  }, [recurringTasksList])
+
+  useEffect(() => {
+    return () => {
+      let newRecurringTasks = [...recurringTasksList]
+      recurringTasksList.forEach((task, index) => {
+        if (task.time - moment().valueOf() < 0 && code !== undefined && code !== null) {
+          newRecurringTasks[index]['done'] = false
+          while (task.time - moment().valueOf() < 0) {
+            newRecurringTasks[index]['time'] = moment(task.time).add(1, 'd').valueOf()
+          }
+          updateProjectByCode(code, { recurringTasks: newRecurringTasks })
+          .then(() => setRecurringTasksList(newRecurringTasks))
+        }
+      })
+    }
+  }, [])
+
   return (
     <>
-      {project.code === null ? <Skeleton height={350}/> :
+      {code === null ? <Skeleton height={350}/> :
         <Card sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -143,15 +180,15 @@ export default function RecurringTasks ({ project }: Props) {
             justifyContent: 'end',
           }}>
             <Button
-            id='save-notes-btn'
+            id='display-list-btn'
             variant='text'
             sx={{ mt: 2, mr: 1 }}
-            onClick={() => openTableHandler()}
+            onClick={() => openListHandler()}
             >
               Show Tasks
             </Button>
             <Button
-            id='save-notes-btn'
+            id='add-item-to-list-btn'
             variant='contained'
             sx={{ mt: 2 }}
             onClick={() => createRecurringTaskButtonHandler()}
@@ -160,7 +197,13 @@ export default function RecurringTasks ({ project }: Props) {
             </Button>
           </Box>
           <Box>
-            <RecurringTasksTable project={project} open={openTable} />
+            <RecurringTasksList 
+              recurringTasksList={recurringTasksList} 
+              code={code} 
+              open={openList} 
+              deleteHandler={deleteHandler}
+              doneCheckboxHandler={doneCheckboxHandler}
+            />
           </Box>
         </Card>
       }

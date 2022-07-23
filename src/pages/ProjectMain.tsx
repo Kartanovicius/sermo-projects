@@ -16,7 +16,7 @@ function ProjectMainContent() {
 
   return (
     <Container maxWidth='lg' sx={{ my: 4, gap: 2 }}>
-      <Typography style={{ fontWeight: 'bold', marginBottom: 32 }} variant='h4'>
+      <Typography style={{ fontWeight: 'bold', marginBottom: 32, fontSize: '2.125rem' }} variant='h1'>
         {project === undefined ? <Skeleton /> : `${project.code} - ${project.client} - ${project.name}`}
       </Typography>
       <Grid container spacing={3}>

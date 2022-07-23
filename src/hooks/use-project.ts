@@ -3,7 +3,6 @@ import { getProjectByCode } from '../services/firebase';
 import { IProject } from '../types';
 
 export default function useProject(code: number) {
-  const [reload, setReload] = useState(false)
   const [currentProject, setCurrentProject] = useState<IProject | undefined>()
 
   useEffect(() => {
@@ -15,8 +14,7 @@ export default function useProject(code: number) {
     if (code) {
       GetProjectByCode(code);
     }
-    setReload(false)
-  }, [code, reload]);
+  }, [code]);
 
-  return { project: currentProject, setProject: setCurrentProject, setReload };
+  return { project: currentProject, setProject: setCurrentProject };
 }

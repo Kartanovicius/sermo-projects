@@ -8,8 +8,8 @@ export interface IProject {
   code: number | null,
   client: string,
   name: string,
-  note?: string,
-  recurringTasks?: Array<recurringTask>,
+  note: string,
+  recurringTasks: Array<recurringTask>,
   dateCreated: number,
 }
 
