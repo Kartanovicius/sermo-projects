@@ -20,6 +20,16 @@ export default function RecurringTasksList ({recurringTasksList, open, code, del
     throw new Error('Project code can\'t be null value')
   }
 
+  function milliToTime(milli: number): string {
+    const hour = moment(milli).toObject().hours
+    const minute = moment(milli).toObject().minutes
+
+    const formatedHour = ("0" + hour).slice(-2)
+    const formatedMinute = ("0" + minute).slice(-2)
+
+    return `${formatedHour}:${formatedMinute}`
+  }
+
   const RecurringTasksList = recurringTasksList.map((item, index) =>
     <ListItem 
     key={index}
@@ -40,7 +50,7 @@ export default function RecurringTasksList ({recurringTasksList, open, code, del
           </ListItemIcon>
         <ListItemText 
         primary={item.task} 
-        secondary={"Next reminder at " + moment(item.time).toObject().hours + ":" + moment(item.time).toObject().minutes} />
+        secondary={`Next reminder at ${milliToTime(item.time)}`} />
       </ListItemButton>
     </ListItem>
   )
