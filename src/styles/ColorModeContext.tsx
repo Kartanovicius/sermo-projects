@@ -76,41 +76,20 @@ const getDesignTokens = (mode: PaletteMode) => ({
         }
       }
     },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          '&:hover': {
+            boxShadow: `${alpha(mode === 'light' ? '#4693ff' : '#3ea3fe', 0.25)} 0 0 0 2px`,
+            borderColor: mode === 'light' ? '#4693ff' : '#3ea3fe',
+          }
+        }
+      }
+    },
     MuiFilledInput: {
       styleOverrides: {
         root: {
-          backgroundColor: 'transparent',
-          '&:hover': {
-            backgroundColor: 'transparent',
-          },
-          '&:focus': {
-            backgroundColor: 'transparent',
-          },
-          '&.Mui-error': {
-            input: {
-              '&:hover': {
-                boxShadow: `${alpha(mode === 'light' ? '#ffd7d8' : '#B65757', 0.25)} 0 0 0 2px`,
-                borderColor: mode === 'light' ? '#ffd7d8' : '#B65757',
-              },
-              '&:focus': {
-                boxShadow: `${alpha(mode === 'light' ? '#ffd7d8' : '#B65757', 0.25)} 0 0 0 2px`,
-              },
-              '&:-webkit-autofill': {
-                WebkitBoxShadow: `0 0 0 100px ${mode === 'light' ? '#fff' : '#34384a'} inset`,
-              },
-            },
-          },
-          'input[type=number]::-webkit-inner-spin-button': {
-            WebkitAppearance: 'none', 
-            margin: 0,
-          },
-          'input[type=number]::-webkit-outer-spin-button': {
-            WebkitAppearance: 'none', 
-            margin: 0,
-          },
-        },
-        input: {
-          border: '1px solid #e2e2e1',
+          border: mode === 'light' ? '1px solid #767676' : '1px solid #858585',
           overflow: 'hidden',
           borderRadius: 4,
           backgroundColor: 'transparent',
@@ -130,6 +109,31 @@ const getDesignTokens = (mode: PaletteMode) => ({
           },
           '&:-webkit-autofill': {
             WebkitBoxShadow: `0 0 0 100px ${mode === 'light' ? '#fff' : '#34384a'} inset`,
+          },
+          '&.Mui-error': {
+            input: {
+              '&:hover': {
+                boxShadow: `${alpha(mode === 'light' ? '#ffd7d8' : '#B65757', 0.25)} 0 0 0 2px`,
+                borderColor: mode === 'light' ? '#ffd7d8' : '#B65757',
+              },
+              '&:focus': {
+                boxShadow: `${alpha(mode === 'light' ? '#ffd7d8' : '#B65757', 0.25)} 0 0 0 2px`,
+              },
+              '&:-webkit-autofill': {
+                WebkitBoxShadow: `0 0 0 100px ${mode === 'light' ? '#fff' : '#34384a'} inset`,
+              },
+            },
+          },
+          '&.MuiInputBase-multiline': {
+            padding: '18px 8px'
+          },
+          'input[type=number]::-webkit-inner-spin-button': {
+            WebkitAppearance: 'none', 
+            margin: 0,
+          },
+          'input[type=number]::-webkit-outer-spin-button': {
+            WebkitAppearance: 'none', 
+            margin: 0,
           },
         },
         // Remove underline
@@ -155,6 +159,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
   },
   shadows: Array(25).fill('none') as Shadows,
 })
+
 
 const ColorModeContext = createContext<any|null>(null)
 

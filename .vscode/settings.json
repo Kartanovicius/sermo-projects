@@ -1,0 +1,13 @@
+{
+  "grammarly.selectors": [
+    {
+      "language": "typescriptreact",
+      "scheme": "file",
+      "pattern": "src/components/project/RecurringTasksTable.tsx"
+    },
+    {
+      "language": "typescriptreact",
+      "scheme": "file"
+    }
+  ]
+}

@@ -1,14 +1,14 @@
-import { User } from 'firebase/auth'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { getUserByUserId } from '../services/firebase'
+import { IUser } from '../types'
 import { useAuth } from './authContext'
 
 const CurrentUserContext = createContext<any|null>(null)
 
 export default function UserProvider({children}: any) {
-  const [userFirst, setUserFirst] = useState<User | undefined>()
-  const [userLast, setUserLast] = useState<User | undefined>()
-  const [userEmailAddress, setUserEmailAddress] = useState<User | undefined>()
+  const [userFirst, setUserFirst] = useState('')
+  const [userLast, setUserLast] = useState('')
+  const [userEmailAddress, setUserEmailAddress] = useState('')
   const [userLoading, setUserLoading] = useState<boolean>(true)
   const [updated, setUpdated] = useState<boolean>(false)
 
@@ -18,9 +18,9 @@ export default function UserProvider({children}: any) {
   useEffect(() => {
     async function getUserObjByUserId(uid: string) {
       const user = await getUserByUserId(uid)
-      setUserFirst(user?.first)
-      setUserLast(user?.last)
-      setUserEmailAddress(user?.emailAddress)
+      setUserFirst(user.name)
+      setUserLast(user.surname)
+      setUserEmailAddress(user.emailAddress)
       setUserLoading(false)
       setUpdated(false)
     }

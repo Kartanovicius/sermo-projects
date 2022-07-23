@@ -1,13 +1,20 @@
 import React, { lazy, Suspense } from 'react'
-import { Route, Routes } from 'react-router-dom'
+// Contexts
 import { useAuth } from './context/authContext'
-import * as ROUTES from './constants/routes'
-import ProtectedRoute, { ProtectedRouteProps } from './helpers/protected-route'
+import ColorModeProvider from './styles/ColorModeContext'
+// Pages
 import Dashboard from './pages/Dashboard'
 import Profile from './pages/AccountSettings'
+import Project from './pages/Project'
+import ProjectMain from './pages/ProjectMain'
+// react-router-dom
+import { Route, Routes } from 'react-router-dom'
+import ProtectedRoute, { ProtectedRouteProps } from './helpers/protected-route'
+// Constants
+import * as ROUTES from './constants/routes'
+// npm packages
 import ReactLoading from 'react-loading'
 import { Paper } from '@mui/material'
-import ColorModeProvider from './styles/ColorModeContext'
 
 const Signin = lazy(() => import('./pages/Signin'))
 const Signup = lazy(() => import('./pages/Signup'))
@@ -58,7 +65,10 @@ function App() {
             />
           }>
             <Route path={ROUTES.MAIN} element={<Dashboard />}/>
-            <Route path={ROUTES.ACCOUNTSETTINGS+':userid'} element={<Profile />}/>
+            <Route path={ROUTES.ACCOUNTSETTINGS} element={<Profile />}/>
+            <Route path={ROUTES.PROJECT+':project_code'} element={<Project />}>
+              <Route path={ROUTES.PROJECT+':project_code'} element={<ProjectMain />}/>
+            </Route>
           </Route>
 
           <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
