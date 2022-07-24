@@ -30,51 +30,59 @@ function App() {
 
   return (
     <ColorModeProvider>
-      {currentUser !== undefined && 
-      <Suspense fallback={
-        <Paper sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh'
-        }}>
-          <ReactLoading type='spinningBubbles' color='#1875d2' height={'10%'} width={'10%'}/>
-        </Paper>
-      }>
-        <Routes>
-          <Route path={ROUTES.SIGN_IN} element={
-            <ProtectedRoute
-            isAuthenticated={!currentUser}
-            authenticationPath={ROUTES.MAIN}
-            outlet={<Signin />}
+      {currentUser !== undefined && (
+        <Suspense
+          fallback={
+            <Paper
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+              }}
+            >
+              <ReactLoading type='spinningBubbles' color='#1875d2' height={'10%'} width={'10%'} />
+            </Paper>
+          }
+        >
+          <Routes>
+            <Route
+              path={ROUTES.SIGN_IN}
+              element={
+                <ProtectedRoute
+                  isAuthenticated={!currentUser}
+                  authenticationPath={ROUTES.MAIN}
+                  outlet={<Signin />}
+                />
+              }
             />
-          }/>
 
-          <Route path={ROUTES.SIGN_UP} element={
-            <ProtectedRoute
-            isAuthenticated={!currentUser}
-            authenticationPath={ROUTES.MAIN}
-            outlet={<Signup />}
+            <Route
+              path={ROUTES.SIGN_UP}
+              element={
+                <ProtectedRoute
+                  isAuthenticated={!currentUser}
+                  authenticationPath={ROUTES.MAIN}
+                  outlet={<Signup />}
+                />
+              }
             />
-          }/>
-          
-          <Route path={ROUTES.MAIN} element={
-            <ProtectedRoute
-              {...defaultProtectedRouteProps}
-              outlet={<Main />}
-            />
-          }>
-            <Route path={ROUTES.MAIN} element={<Dashboard />}/>
-            <Route path={ROUTES.ACCOUNTSETTINGS} element={<Profile />}/>
-            <Route path={ROUTES.PROJECT+':project_code'} element={<Project />}>
-              <Route path={ROUTES.PROJECT+':project_code'} element={<ProjectMain />}/>
+
+            <Route
+              path={ROUTES.MAIN}
+              element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Main />} />}
+            >
+              <Route path={ROUTES.MAIN} element={<Dashboard />} />
+              <Route path={ROUTES.ACCOUNTSETTINGS} element={<Profile />} />
+              <Route path={ROUTES.PROJECT + ':project_code'} element={<Project />}>
+                <Route path={ROUTES.PROJECT + ':project_code'} element={<ProjectMain />} />
+              </Route>
             </Route>
-          </Route>
 
-          <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
-
-        </Routes>
-      </Suspense>}
+            <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      )}
     </ColorModeProvider>
   )
 }
