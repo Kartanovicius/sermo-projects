@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getProjectByCode } from '../services/firebase';
-import { IProject } from '../types';
+import { IProject } from '../store/features/project/project.types';
 
 export default function useProject(code: number) {
   const [currentProject, setCurrentProject] = useState<IProject | undefined>()

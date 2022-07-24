@@ -1,6 +1,7 @@
-import { addDoc, arrayUnion, collection, DocumentData, getDocs, orderBy, query, updateDoc, where } from 'firebase/firestore'
+import { addDoc, arrayUnion, collection, DocumentData, getDocs, limit, orderBy, query, updateDoc, where } from 'firebase/firestore'
 import { db } from '../lib/firebase'
-import { IProject, IUser } from '../types'
+import { IProject } from '../store/features/project/project.types'
+import { IUser } from '../types'
 
 
 export async function getUserByUserId(uid: string) {
@@ -26,7 +27,7 @@ export async function createProject(project: IProject) {
   const qProject = query(projectRef, where('code', '==', project.code))
   const projectQuerySnapshot = await getDocs(qProject)
 
-  if (!projectQuerySnapshot.empty) throw new Error("project-code-is-not-unique")
+  if (!projectQuerySnapshot.empty) throw new Error('project-code-is-not-unique')
 
   await addDoc(collection(db, 'projects'), project)
   
@@ -62,6 +63,21 @@ export async function getProjectByCode(code: number) {
   return querySnapshot.docs[0].data() as IProject
 }
 
+export async function getProjectsByKeyword(keyword: string) {
+  const projectRef = collection(db, 'projects')
+
+  const q = query(projectRef, limit(8), where('keywords', 'array-contains', keyword))
+
+  const querySnapshot = await getDocs(q)
+  const allProjects: DocumentData[] = []
+
+  querySnapshot.forEach(project => {
+    allProjects.push(project.data())
+  })
+
+  return allProjects
+}
+
 export async function updateProjectByCode(
   code: number, 
   newValue: {
@@ -74,5 +90,5 @@ export async function updateProjectByCode(
   const q = query(userRef, where('code', '==', code))
 
   const querySnapshot = await getDocs(q)
-  updateDoc(querySnapshot.docs[0].ref, newValue)
+  return updateDoc(querySnapshot.docs[0].ref, newValue)
 }

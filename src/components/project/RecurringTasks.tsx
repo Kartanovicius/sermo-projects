@@ -7,7 +7,7 @@ import { updateProjectByCode } from '../../services/firebase'
 // npm packages
 import moment from 'moment'
 // Types
-import { IProject, IRecurringTask } from '../../types'
+import { IProject, IRecurringTask } from '../../store/features/project/project.types'
 // Components
 import RecurringTasksList from './RecurringTasksList'
 

@@ -2,7 +2,7 @@ import { Skeleton, Card, Typography, TextField, Box, CircularProgress } from '@m
 import { useEffect, useRef, useState } from 'react'
 import useDebounce from '../../hooks/use-debounce'
 import { updateProjectByCode } from '../../services/firebase'
-import { IProject } from '../../types'
+import { IProject } from '../../store/features/project/project.types'
 
 interface Props {
   project: IProject

@@ -3,7 +3,8 @@ import { ListItem, ListItemText, Skeleton, Card, Typography, Divider, Grid, List
 // npm packages
 import dateFormat from 'dateformat'
 // Types
-import { IProject, IUser } from '../../types'
+import { IProject } from '../../store/features/project/project.types'
+import { IUser } from '../../types'
 
 interface Props {
   projectUser: IUser,

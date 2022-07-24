@@ -4,7 +4,7 @@ import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded'
 // npm packages
 import moment from 'moment'
 // Types
-import { IProject, IRecurringTask } from '../../types'
+import { IProject, IRecurringTask } from '../../store/features/project/project.types'
 
 interface Props {
   code: IProject['code']
