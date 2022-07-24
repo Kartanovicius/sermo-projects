@@ -32,13 +32,12 @@ export default function NotFound() {
   const [meme, setMeme] = useState<IMeme>()
 
   useEffect(() => {
-    return () => {
-      fetch('https://meme-api.herokuapp.com/gimme')
-        .then((response) => response.json())
-        .then((data: IMeme) => {
-          setMeme(data)
-        })
-    }
+    console.log('https://meme-api.herokuapp.com/gimme')
+    fetch('https://meme-api.herokuapp.com/gimme')
+      .then((response) => response.json())
+      .then((data: IMeme) => {
+        setMeme(data)
+      })
   }, [])
 
   return (
