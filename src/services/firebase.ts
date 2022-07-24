@@ -66,7 +66,12 @@ export async function getProjectByCode(code: number) {
 export async function getProjectsByKeyword(keyword: string) {
   const projectRef = collection(db, 'projects')
 
-  const q = query(projectRef, limit(8), where('keywords', 'array-contains', keyword))
+  const q = query(
+    projectRef, 
+    limit(8), 
+    where('keywords', 'array-contains', keyword), 
+    orderBy('dateCreated', 'desc')
+  )
 
   const querySnapshot = await getDocs(q)
   const allProjects: DocumentData[] = []
