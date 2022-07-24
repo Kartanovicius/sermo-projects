@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 // Material-ui
 import { ListItemText, ListItemButton, List, ListSubheader, Divider, Button, Box, TextField } from '@mui/material'
-// Contexts
-import { useAuth } from '../../context/authContext'
 // npm packages
 import { useDialog } from 'react-dialog-async'
 import { useNavigate } from 'react-router-dom'
@@ -13,51 +11,26 @@ import * as ROUTES from '../../constants/routes'
 // Custom hooks
 import useDebounce from '../../hooks/use-debounce'
 // Redux toolkit
-import { fetchSearchedProjects, fetchUserProjects } from '../../store/features/project/projectsSlice'
-import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { useGetProjectsByKeywordQuery } from '../../store/features/project/project.api'
 
 function ProjectsContent() {
   // Navigation
   const navigate = useNavigate()
   // Create project
   const createProjectDialog = useDialog(CreateProjectDialog)
-  const [newProjectCreted, setNewProjectCreted] = useState(false)
   // Search
   const [searchValue, setSearchValue] = useState('')
-  const [searchActive, setSearchActive] = useState(false)
   const searchDebounce = useDebounce(searchValue, 500)
-  // User
-  const { currentUser } = useAuth()
 
   async function CreateProjectDialogHandler() {
     await createProjectDialog.show('')
-    setNewProjectCreted(true)
+    // Refect projects after new project were created
+    refetch()
   }
 
-  // Display projects
-  // Dispatch redux functions for fetching projects
-  const { projects } = useAppSelector(state => state.projects)
-  const dispatch = useAppDispatch()
-
-  // Search project only every 500ms and when there is > 2 chars enetered
-  useEffect(() => {
-    if (searchValue.length > 2) {
-      dispatch(fetchSearchedProjects(searchValue))
-      setSearchActive(true)
-    }
-    // Do not fetch data if search haven't been activated
-    else if (searchActive) {
-      dispatch(fetchUserProjects(currentUser.uid))
-      setSearchActive(false)
-    }
-  },[searchDebounce])
-
-  // Fetch data initaily and when new project created
-  useEffect(() => {
-    dispatch(fetchUserProjects(currentUser.uid))
-    setNewProjectCreted(false)
-  }, [newProjectCreted, currentUser.uid])
-  
+  const { data: projects, refetch } = useGetProjectsByKeywordQuery(searchDebounce.toLowerCase(), { 
+    skip: searchDebounce.length > 0 && searchDebounce.length < 3
+  })
 
   return (
     <>

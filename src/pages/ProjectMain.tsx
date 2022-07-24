@@ -8,12 +8,15 @@ import RecurringTasks from '../components/project/RecurringTasks'
 // custom hooks
 import useUser from '../hooks/use-user'
 import useProject from '../hooks/use-project'
+import { useGetProjectQuery } from '../store/features/project/project.api'
+import { useEffect, useState } from 'react'
 
 function ProjectMainContent() {
   const { project_code } = useParams()
-  const { project } = useProject(Number(project_code))
+  const { data: project } = useGetProjectQuery(Number(project_code))
   const { user } = useUser(project !== undefined ? project.owner : '')
 
+  
   return (
     <Container maxWidth='lg' sx={{ my: 4, gap: 2 }}>
       <Typography style={{ fontWeight: 'bold', marginBottom: 32, fontSize: '2.125rem' }} variant='h1'>
