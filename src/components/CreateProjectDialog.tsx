@@ -4,12 +4,13 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, T
 // npm packages
 import { AsyncDialogProps } from 'react-dialog-async'
 // Firebase
+import { createProject } from '../services/firebase'
 // contexts
 import { useAuth } from '../context/authContext'
 // constants
-import { createProject } from '../services/firebase'
 import * as ALERTS from '../constants/alerts'
-import { IProject } from '../types'
+// Types
+import { IProject } from '../store/features/project/project.types'
 
 
 export const CreateProjectDialog: React.FC<AsyncDialogProps<string, string>> = 
@@ -33,6 +34,30 @@ export const CreateProjectDialog: React.FC<AsyncDialogProps<string, string>> =
     setName('')
   }, [open])
 
+  // Generate keywords for searching project
+  const createKeywords = (text: string) => {
+    const arrName: Array<string> = []
+    let curName = ''
+    text.toLowerCase().split('').forEach((letter: string) => {
+      curName += letter
+      arrName.push(curName)
+    })
+    return arrName
+  }
+
+  const generateKeywords = (code: number, client: string, name: string) =>{
+    const fullProjectName = createKeywords(`${code} - ${client} - ${name}`)
+    const clientFirst = createKeywords(`${client} - ${name}`)
+    const onlyProjectName = createKeywords(name)
+    return [
+      ...Array.from(new Set([
+        '',
+        ...fullProjectName,
+        ...clientFirst,
+        ...onlyProjectName,
+      ]))
+    ]
+  }
 
   async function createProjectHandler() {
     try {
@@ -44,6 +69,7 @@ export const CreateProjectDialog: React.FC<AsyncDialogProps<string, string>> =
         note: '',
         recurringTasks: [],
         dateCreated: Date.now(),
+        keywords: generateKeywords(code, client, name),
       }
       await createProject(project)
       handleClose()
@@ -57,48 +83,47 @@ export const CreateProjectDialog: React.FC<AsyncDialogProps<string, string>> =
     <Dialog open={open} onClose={() => handleClose()}>
       <DialogTitle>Create new project</DialogTitle>
       <DialogContent>
-        <Typography variant='subtitle2'>To create a new project record, please fill all required fields</Typography>
+        <Typography variant="subtitle2">To create a new project record, please fill all required fields</Typography>
         <TextField
           autoFocus
-          margin='dense'
-          id='code'
-          label='Project code'
-          type='number'
+          margin="dense"
+          id="code"
+          label="Project code"
+          type="number"
           fullWidth
-          variant='filled'
+          variant="filled"
           required
           error={codeAlreadyExist}
-          helperText={codeAlreadyExist ? ALERTS.PROJECT_CODE_ALREADY_EXISTS : ''}
-          onChange={e => {
+          helperText={codeAlreadyExist ? ALERTS.PROJECT_CODE_ALREADY_EXISTS : ""}
+          onChange={(e) => {
             setCode(parseInt(e.target.value))
             setCodeAlreadyExist(false)
-          }
-          }
+          }}
         />
         <TextField
-          margin='dense'
-          id='client'
-          label='Project client'
-          type='text'
+          margin="dense"
+          id="client"
+          label="Project client"
+          type="text"
           fullWidth
-          variant='filled'
+          variant="filled"
           required
-          onChange={e => setClient(e.target.value)}
+          onChange={(e) => setClient(e.target.value)}
         />
         <TextField
-          margin='dense'
-          id='name'
-          label='Project name'
-          type='text'
+          margin="dense"
+          id="name"
+          label="Project name"
+          type="text"
           fullWidth
-          variant='filled'
+          variant="filled"
           required
-          onChange={e => setName(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
         />
       </DialogContent>
       <DialogActions sx={{ px: 3, pb: 2 }}>
-        <Button variant='outlined' onClick={() => handleClose()}>Cancel</Button>
-        <Button variant='contained' 
+        <Button variant="outlined" onClick={() => handleClose()}>Cancel</Button>
+        <Button variant="contained" 
           disabled={code.toString().length !== 6 || client.length === 0 || name.length === 0} 
           onClick={() => {createProjectHandler()}}
         >
