@@ -21,7 +21,7 @@ import * as ALERTMESSAGE from '../../constants/alerts'
 
 export const ChangePasswordDialog: React.FC<
   AsyncDialogProps<string, { message: string; variant: AlertColor }[]>
-> = ({ open, handleClose, data }) => {
+> = ({ open, handleClose }) => {
   const { currentUser } = useAuth()
   const [previousPassword, setPreviousPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')

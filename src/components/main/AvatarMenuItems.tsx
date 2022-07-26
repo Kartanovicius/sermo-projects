@@ -53,7 +53,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 }))
 
 export const AvatarMenuItems = (props: any) => {
-  const { signOutUser, currentUser } = useAuth()
+  const { signOutUser } = useAuth()
   const navigate = useNavigate()
 
   const handleClose = () => {
@@ -77,7 +77,7 @@ export const AvatarMenuItems = (props: any) => {
   return (
     <React.Fragment>
       <MenuItem
-        onClick={(e) => {
+        onClick={() => {
           handleClose()
           navigate(ROUTES.ACCOUNTSETTINGS)
         }}
@@ -86,7 +86,7 @@ export const AvatarMenuItems = (props: any) => {
         Account settings
       </MenuItem>
       <MenuItem onClick={signOutUser}>Log out</MenuItem>
-      <MenuItem onClick={(e) => changeColor()}>
+      <MenuItem onClick={() => changeColor()}>
         <FormControlLabel
           control={<MaterialUISwitch sx={{ m: 0.5 }} checked={switchState} />}
           label='Theme switch'

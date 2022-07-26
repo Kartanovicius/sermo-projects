@@ -20,7 +20,6 @@ import grey from '@mui/material/colors/grey'
 // Redux
 import { useGetWeatherQuery } from '../../store/features/weather/weather.api'
 import { usePersistentStorageValue } from '../../hooks/use-persistentStorageValue'
-import { now } from 'lodash'
 
 const FIREBASE_ERRORS: { [code: number]: { message: string } } = {}
 FIREBASE_ERRORS[1003] = { message: 'City must have a value' }

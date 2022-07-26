@@ -14,6 +14,7 @@ class LocalStorage implements PersistentStorage {
 
     try {
       return JSON.parse(item)
+      // eslint-disable-next-line no-empty
     } catch {}
 
     return item
@@ -31,9 +32,8 @@ class MockStorage implements PersistentStorage {
   getItem() {
     return null
   }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   setItem() {}
 }
 
-export const persistentStorage = window?.localStorage
-  ? new LocalStorage()
-  : new MockStorage()
+export const persistentStorage = window?.localStorage ? new LocalStorage() : new MockStorage()
