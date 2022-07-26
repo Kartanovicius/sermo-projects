@@ -1,11 +1,11 @@
+import React from 'react'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { getUserByUserId } from '../services/firebase'
-import { IUser } from '../types'
 import { useAuth } from './authContext'
 
-const CurrentUserContext = createContext<any|null>(null)
+const CurrentUserContext = createContext<any | null>(null)
 
-export default function UserProvider({children}: any) {
+export default function UserProvider({ children }: any) {
   const [userFirst, setUserFirst] = useState('')
   const [userLast, setUserLast] = useState('')
   const [userEmailAddress, setUserEmailAddress] = useState('')
@@ -42,11 +42,7 @@ export default function UserProvider({children}: any) {
     setUpdated,
   }
 
-  return (
-    <CurrentUserContext.Provider value={value}>
-      {children}
-    </CurrentUserContext.Provider>
-  )
+  return <CurrentUserContext.Provider value={value}>{children}</CurrentUserContext.Provider>
 }
 
 export function useCurrentUser() {

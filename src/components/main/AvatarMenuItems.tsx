@@ -76,12 +76,16 @@ export const AvatarMenuItems = (props: any) => {
 
   return (
     <React.Fragment>
-      <MenuItem onClick={(e) => {handleClose(); navigate(ROUTES.ACCOUNTSETTINGS)}} sx={{color: 'primary.main'}}>
+      <MenuItem
+        onClick={(e) => {
+          handleClose()
+          navigate(ROUTES.ACCOUNTSETTINGS)
+        }}
+        sx={{ color: 'primary.main' }}
+      >
         Account settings
       </MenuItem>
-      <MenuItem onClick={signOutUser}>
-        Log out
-      </MenuItem>
+      <MenuItem onClick={signOutUser}>Log out</MenuItem>
       <MenuItem onClick={(e) => changeColor()}>
         <FormControlLabel
           control={<MaterialUISwitch sx={{ m: 0.5 }} checked={switchState} />}

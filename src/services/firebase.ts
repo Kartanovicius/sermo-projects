@@ -1,19 +1,34 @@
-import { addDoc, arrayUnion, collection, DocumentData, getDocs, limit, orderBy, query, updateDoc, where } from 'firebase/firestore'
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  DocumentData,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { IProject } from '../store/features/project/project.types'
 import { IUser } from '../types'
 
+// User
 
 export async function getUserByUserId(uid: string) {
   const userRef = collection(db, 'users')
 
   const q = query(userRef, where('uid', '==', uid))
-  
+
   const querySnapshot = await getDocs(q)
   return querySnapshot.docs[0].data() as IUser
 }
 
-export async function updateFieldByUserId(uid: string, newValue: {name?: string, surname?: string, emailAddress?: 'string'}) {
+export async function updateFieldByUserId(
+  uid: string,
+  newValue: { name?: string; surname?: string; emailAddress?: 'string' },
+) {
   const userRef = collection(db, 'users')
 
   const q = query(userRef, where('uid', '==', uid))
@@ -21,6 +36,10 @@ export async function updateFieldByUserId(uid: string, newValue: {name?: string,
   const querySnapshot = await getDocs(q)
   updateDoc(querySnapshot.docs[0].ref, newValue)
 }
+
+// User End
+
+// Project
 
 export async function createProject(project: IProject) {
   const projectRef = collection(db, 'projects')
@@ -30,12 +49,12 @@ export async function createProject(project: IProject) {
   if (!projectQuerySnapshot.empty) throw new Error('project-code-is-not-unique')
 
   await addDoc(collection(db, 'projects'), project)
-  
+
   const userRef = collection(db, 'users')
   const q = query(userRef, where('uid', '==', project.owner))
 
   const querySnapshot = await getDocs(q)
-  updateDoc(querySnapshot.docs[0].ref, {projects: arrayUnion({code: project.code})})
+  updateDoc(querySnapshot.docs[0].ref, { projects: arrayUnion({ code: project.code }) })
 }
 
 export async function getUserProjects(uid: string) {
@@ -43,11 +62,11 @@ export async function getUserProjects(uid: string) {
 
   const qWhere = query(projectsRef, where('owner', '==', uid))
   const qByDate = query(qWhere, orderBy('dateCreated', 'desc'))
-  
+
   const querySnapshot = await getDocs(qByDate)
   const allProjects: DocumentData[] = []
 
-  querySnapshot.forEach(project => {
+  querySnapshot.forEach((project) => {
     allProjects.push(project.data())
   })
 
@@ -67,16 +86,16 @@ export async function getProjectsByKeyword(keyword: string) {
   const projectRef = collection(db, 'projects')
 
   const q = query(
-    projectRef, 
-    limit(8), 
-    where('keywords', 'array-contains', keyword), 
-    orderBy('dateCreated', 'desc')
+    projectRef,
+    limit(15),
+    where('keywords', 'array-contains', keyword),
+    orderBy('dateCreated', 'desc'),
   )
 
   const querySnapshot = await getDocs(q)
   const allProjects: DocumentData[] = []
 
-  querySnapshot.forEach(project => {
+  querySnapshot.forEach((project) => {
     allProjects.push(project.data())
   })
 
@@ -84,12 +103,12 @@ export async function getProjectsByKeyword(keyword: string) {
 }
 
 export async function updateProjectByCode(
-  code: number, 
+  code: number,
   newValue: {
-    note?: IProject['note'], 
-    recurringTasks?: IProject['recurringTasks'],
-  }
-  ) {
+    note?: IProject['note']
+    recurringTasks?: IProject['recurringTasks']
+  },
+) {
   const userRef = collection(db, 'projects')
 
   const q = query(userRef, where('code', '==', code))
@@ -97,3 +116,5 @@ export async function updateProjectByCode(
   const querySnapshot = await getDocs(q)
   return updateDoc(querySnapshot.docs[0].ref, newValue)
 }
+
+// Project End

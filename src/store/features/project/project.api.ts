@@ -1,14 +1,19 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
-import { DocumentData } from 'firebase/firestore'
-import { getProjectByCode, getProjectsByKeyword, getUserProjects } from '../../../services/firebase'
+import { DocumentData } from 'firebase/firestore/lite'
+import {
+  createProject,
+  getProjectByCode,
+  getProjectsByKeyword,
+  getUserProjects,
+} from '../../../services/firebase'
 import { IProject } from './project.types'
 
 export const projectApi = createApi({
   reducerPath: 'api/projectApi',
   baseQuery: fakeBaseQuery(),
-  endpoints: build => ({
+  endpoints: (build) => ({
     getProjectsByUser: build.query({
-      async queryFn(uid) {
+      async queryFn(uid: string) {
         let result: DocumentData[] = []
         if (uid) {
           result = await getUserProjects(uid)
@@ -18,17 +23,28 @@ export const projectApi = createApi({
     }),
     getProjectsByKeyword: build.query({
       async queryFn(keyword) {
-        let result = await getProjectsByKeyword(keyword)
+        const result = await getProjectsByKeyword(keyword)
         return { data: result }
       },
     }),
     getProject: build.query({
-      async queryFn(code) {
-        let result = await getProjectByCode(code)
+      async queryFn(code: number) {
+        const result = await getProjectByCode(code)
         return { data: result }
       },
     }),
-  })
+    createProject: build.mutation<IProject, IProject>({
+      async queryFn(project) {
+        await createProject(project)
+        return { data: project }
+      },
+    }),
+  }),
 })
 
-export const { useGetProjectsByUserQuery, useGetProjectsByKeywordQuery, useGetProjectQuery } = projectApi
+export const {
+  useGetProjectsByUserQuery,
+  useGetProjectsByKeywordQuery,
+  useGetProjectQuery,
+  useCreateProjectMutation,
+} = projectApi

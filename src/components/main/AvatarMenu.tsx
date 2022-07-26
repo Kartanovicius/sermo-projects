@@ -1,5 +1,5 @@
+import React, { useState } from 'react'
 import { Avatar, Icon, Button, styled, Menu, Typography, Skeleton } from '@mui/material'
-import { useState } from 'react'
 import { AvatarMenuItems } from './AvatarMenuItems'
 import { useCurrentUser } from '../../context/currentUserContext'
 
@@ -12,7 +12,7 @@ const AvatarButton = styled(Button)(({ theme }) => ({
   },
   fontWeight: 'normal',
   border: 'none',
-  textTransform: 'lowercase'
+  textTransform: 'lowercase',
 }))
 
 function AvatarMenuContent() {
@@ -28,51 +28,64 @@ function AvatarMenuContent() {
   const handleClose = () => {
     setAnchorEl(null)
   }
-  
+
   return (
     <>
-    {userEmailAddress === undefined ? <Skeleton width={226} height={42}/> : 
-      <AvatarButton onClick={handleClick}>
-        <Icon sx={{ mr: 1, width: 30, height: 30 }}>
-          <Avatar sx={{ width: 30, height: 30, bgcolor: 'primary.main', color: 'common.white', fontSize: 14 }}>{nameFirstLetter}{surnameFirstLetter}</Avatar>
-        </Icon>
-        <Typography variant='body2'>{userEmailAddress}</Typography>
-      </AvatarButton>
-    }
+      {userEmailAddress === undefined ? (
+        <Skeleton width={226} height={42} />
+      ) : (
+        <AvatarButton onClick={handleClick}>
+          <Icon sx={{ mr: 1, width: 30, height: 30 }}>
+            <Avatar
+              sx={{
+                width: 30,
+                height: 30,
+                bgcolor: 'primary.main',
+                color: 'common.white',
+                fontSize: 14,
+              }}
+            >
+              {nameFirstLetter}
+              {surnameFirstLetter}
+            </Avatar>
+          </Icon>
+          <Typography variant='body2'>{userEmailAddress}</Typography>
+        </AvatarButton>
+      )}
 
       <Menu
-      anchorEl={anchorEl}
-      id='account-menu'
-      open={openAvatar}
-      onClose={handleClose}
-      PaperProps={{
-        sx: {
-          backgroundImage: 'none',
-          overflow: 'visible',
-          mt: 0.5,
-          '& .MuiAvatar-root': {
-            width: 32,
-            height: 32,
-            ml: -0.5,
-            mr: 1,
+        anchorEl={anchorEl}
+        id='account-menu'
+        open={openAvatar}
+        onClose={handleClose}
+        PaperProps={{
+          sx: {
+            backgroundImage: 'none',
+            overflow: 'visible',
+            mt: 0.5,
+            '& .MuiAvatar-root': {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
+            },
+            '&:before': {
+              content: '""',
+              display: 'block',
+              position: 'absolute',
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              transform: 'translateY(-50%) rotate(45deg)',
+              zIndex: 0,
+            },
           },
-          '&:before': {
-            content: '""',
-            display: 'block',
-            position: 'absolute',
-            top: 0,
-            right: 14,
-            width: 10,
-            height: 10,
-            transform: 'translateY(-50%) rotate(45deg)',
-            zIndex: 0,
-          },
-        },
-      }}
-      transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <AvatarMenuItems setAnchorEl={setAnchorEl}/>
+        <AvatarMenuItems setAnchorEl={setAnchorEl} />
       </Menu>
     </>
   )

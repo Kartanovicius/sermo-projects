@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
-import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded'
+import { useNavigate, useLocation } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
-import { List, ListItemButton, ListItemIcon, ListItemText, styled } from '@mui/material';
-
+import { List, ListItemButton, ListItemIcon, ListItemText, styled } from '@mui/material'
 
 const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
   fontWeight: 'bold',
@@ -12,61 +11,64 @@ const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
   '&:hover': {
     color: theme.palette.primary.main,
     backgroundColor: theme.palette.background.default,
-    "& .MuiListItemIcon-root": {
+    '& .MuiListItemIcon-root': {
       color: theme.palette.primary.main,
-    }
+    },
   },
   '&.Mui-selected': {
     color: theme.palette.text.primary,
     backgroundColor: theme.palette.background.paper,
     borderTopRightRadius: 4,
     borderBottomRightRadius: 4,
-    "& .MuiListItemIcon-root": {
+    '& .MuiListItemIcon-root': {
       color: theme.palette.text.primary,
-    }
+    },
   },
-  "&.Mui-selected:hover": {
+  '&.Mui-selected:hover': {
     color: theme.palette.primary.main,
     backgroundColor: theme.palette.background.paper,
-    "& .MuiListItemIcon-root": {
+    '& .MuiListItemIcon-root': {
       color: theme.palette.primary.main,
-    }
+    },
   },
-}));
+}))
 
-export const ListComponent = () => {  
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
-  const navigate = useNavigate();
-  const location = useLocation();
+export const ListComponent = () => {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(0)
+  const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     switch (location.pathname) {
       case '/':
-          setSelectedIndex(0)
-        break;
+        setSelectedIndex(0)
+        break
       default:
-          setSelectedIndex(null)
-        break;
+        setSelectedIndex(null)
+        break
     }
-  }, [location]);
+  }, [location])
 
   const handleListItemClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     index: number,
   ) => {
-    setSelectedIndex(index);
-  };
+    setSelectedIndex(index)
+  }
 
   return (
-    <List component="nav" sx={{bgcolor: 'Background.default'}}>
-      <StyledListItemButton 
-        onClick={(e) => {navigate(ROUTES.MAIN); handleListItemClick(e, 0)}} 
+    <List component='nav' sx={{ bgcolor: 'Background.default' }}>
+      <StyledListItemButton
+        onClick={(e) => {
+          navigate(ROUTES.MAIN)
+          handleListItemClick(e, 0)
+        }}
         selected={selectedIndex === 0}
       >
-        <ListItemIcon >
+        <ListItemIcon>
           <DashboardRoundedIcon />
         </ListItemIcon>
-        <ListItemText primary="Dashboard" disableTypography/>
+        <ListItemText primary='Dashboard' disableTypography />
       </StyledListItemButton>
     </List>
   )

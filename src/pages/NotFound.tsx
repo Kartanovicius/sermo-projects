@@ -45,7 +45,7 @@ export default function NotFound() {
       <CssBaseline />
       {meme && (
         <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Card sx={{ maxWidth: 400, mt: 8 }}>
+          <Card sx={{ maxWidth: 400, mt: 4 }}>
             <CardHeader title={meme?.title} />
             <CardMedia component='img' height='auto' image={meme?.preview[2]} alt='Paella dish' />
             <CardContent>

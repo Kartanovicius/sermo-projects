@@ -1,3 +1,4 @@
+import React from 'react'
 // Material-ui
 import CssBaseline from '@mui/material/CssBaseline'
 import Box from '@mui/material/Box'
@@ -10,7 +11,6 @@ import CurrentUserProvider from '../context/currentUserContext'
 import { DialogProvider } from 'react-dialog-async'
 
 export default function Main() {
-  
   return (
     <CurrentUserProvider>
       <DialogProvider>
@@ -18,12 +18,12 @@ export default function Main() {
           <CssBaseline />
           <Navigation />
           <Box
-          component='main'
-          sx={{
-            flexGrow: 1,
-            height: '100vh',
-            overflow: 'auto',
-          }}
+            component='main'
+            sx={{
+              flexGrow: 1,
+              height: '100vh',
+              overflow: 'auto',
+            }}
           >
             <Toolbar />
             <Outlet />

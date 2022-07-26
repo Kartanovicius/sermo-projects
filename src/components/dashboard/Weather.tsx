@@ -12,22 +12,79 @@ import {
   IconButton,
   Divider,
   Collapse,
+  createTheme,
+  ThemeProvider,
 } from '@mui/material'
 import TuneRoundedIcon from '@mui/icons-material/TuneRounded'
 import grey from '@mui/material/colors/grey'
 // Redux
 import { useGetWeatherQuery } from '../../store/features/weather/weather.api'
 import { usePersistentStorageValue } from '../../hooks/use-persistentStorageValue'
+import { now } from 'lodash'
 
 const FIREBASE_ERRORS: { [code: number]: { message: string } } = {}
 FIREBASE_ERRORS[1003] = { message: 'City must have a value' }
 FIREBASE_ERRORS[1006] = { message: 'No matching location found' }
 
-const Item = styled(Paper)(() => ({
-  textAlign: 'center',
-  boxShadow: 'none',
-  fontSize: 11,
-}))
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    large: true
+    medium: true
+    small: true
+    extraLarge: true
+  }
+}
+
+const theme = createTheme({
+  components: {
+    MuiTypography: {
+      variants: [
+        {
+          props: { variant: 'extraLarge' },
+          style: {
+            display: 'block',
+            textAlign: 'center',
+            whiteSpace: 'nowrap',
+            fontSize: 40,
+            '& span': {
+              fontSize: 20,
+            },
+          },
+        },
+        {
+          props: { variant: 'large' },
+          style: {
+            display: 'block',
+            textAlign: 'center',
+            whiteSpace: 'nowrap',
+            fontSize: 20,
+            '& span': {
+              fontSize: 12,
+            },
+          },
+        },
+        {
+          props: { variant: 'medium' },
+          style: {
+            display: 'block',
+            textAlign: 'center',
+            whiteSpace: 'nowrap',
+            fontSize: 16,
+          },
+        },
+        {
+          props: { variant: 'small' },
+          style: {
+            display: 'block',
+            textAlign: 'center',
+            whiteSpace: 'nowrap',
+            fontSize: 12,
+          },
+        },
+      ],
+    },
+  },
+})
 
 const Link = styled(Paper)(({ theme }) => ({
   textAlign: 'right',
@@ -43,7 +100,9 @@ export default function Weather() {
   const [location, setLocation] = usePersistentStorageValue('location', 'Vilnius')
   const [edit, setEdit] = useState(false)
 
-  const { data, error, isLoading, isFetching, isError } = useGetWeatherQuery(location)
+  const { data, error, isLoading, isFetching, isError } = useGetWeatherQuery(location, {
+    refetchOnFocus: true,
+  })
 
   function confirmEventHandler() {
     if (cityRef.current) {
@@ -88,7 +147,7 @@ export default function Weather() {
               sx={{ marginBottom: '16px' }}
               defaultValue={data ? data.location.name : ''}
               inputRef={cityRef}
-              error={!!error}
+              error={isError}
               helperText={
                 error
                   ? JSON.stringify(error).includes('"code":1003')
@@ -111,8 +170,8 @@ export default function Weather() {
           </Collapse>
 
           {data && (
-            <>
-              <Item>
+            <ThemeProvider theme={theme}>
+              <Box textAlign='center'>
                 <img
                   src={`${process.env.PUBLIC_URL}icons/weather/${data.current.condition.code}${
                     data.current.is_day === 1 ? '_day' : '_night'
@@ -120,42 +179,48 @@ export default function Weather() {
                   alt='Weather status img'
                   style={{ height: 80, width: 80, margin: '16px 0', userSelect: 'none' }}
                 />
-              </Item>
-              <Item>
-                <Typography variant='h4'>{data.current.temp_c}&deg;C</Typography>
-              </Item>
-              <Item>
-                <Typography variant='body1'>
+              </Box>
+              <Box>
+                <Typography variant='extraLarge'>
+                  {data.current.temp_c}
+                  <span>&deg;C</span>
+                </Typography>
+              </Box>
+              <Box>
+                <Typography variant='medium'>
                   {data.location.name}, {data.location.region}
                 </Typography>
-              </Item>
+              </Box>
               <Grid container spacing={1} columns={{ xs: 12 }} sx={{ marginTop: '8px' }}>
                 <Grid item xs={4}>
-                  <Item>
-                    <Typography variant='body2' fontSize={12}>
-                      Wind now
+                  <Box>
+                    <Typography variant='small'>Wind now</Typography>
+                    <Typography variant='large'>
+                      {data.current.wind_kph}
+                      <span className='small-text'>km/h</span>
                     </Typography>
-                    <Typography variant='body1'>{data.current.wind_kph}km/h</Typography>
-                  </Item>
+                  </Box>
                 </Grid>
                 <Grid item xs={4}>
-                  <Item>
-                    <Typography variant='body2' fontSize={12}>
-                      Humidity
+                  <Box>
+                    <Typography variant='small'>Humidity</Typography>
+                    <Typography variant='large'>
+                      {data.current.humidity}
+                      <span className='small-text'>%</span>
                     </Typography>
-                    <Typography variant='body1'>{data.current.humidity}%</Typography>
-                  </Item>
+                  </Box>
                 </Grid>
                 <Grid item xs={4}>
-                  <Item>
-                    <Typography variant='body2' fontSize={12}>
-                      Precipitation
+                  <Box>
+                    <Typography variant='small'>Precipitation</Typography>
+                    <Typography variant='large'>
+                      {data.current.precip_mm}
+                      <span className='small-text'>mm</span>
                     </Typography>
-                    <Typography variant='body1'>{data.current.precip_mm}mm</Typography>
-                  </Item>
+                  </Box>
                 </Grid>
               </Grid>
-            </>
+            </ThemeProvider>
           )}
         </Paper>
       )}

@@ -1,3 +1,4 @@
+import React from 'react'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { alpha, createTheme, PaletteMode, ThemeProvider } from '@mui/material'
 import { Shadows } from '@mui/material/styles/shadows'
@@ -15,7 +16,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
           },
           background: {
             default: '#eef6f8',
-            paper: '#fff'
+            paper: '#fff',
           },
           text: {
             secondary: '#79778f',
@@ -23,7 +24,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
           },
           action: {
             hover: '#e6f0fe',
-          }
+          },
         }
       : {
           // palette values for dark mode
@@ -34,7 +35,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
           },
           background: {
             default: '#222430',
-            paper: '#34384a'
+            paper: '#34384a',
           },
           text: {
             secondary: '#a3a5a9',
@@ -46,10 +47,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
         }),
   },
   typography: {
-    fontFamily: [
-      'Inter',
-      'sans-serif',
-    ].join(','),
+    fontFamily: ['Inter', 'sans-serif'].join(','),
   },
   components: {
     MuiPaper: {
@@ -63,18 +61,18 @@ const getDesignTokens = (mode: PaletteMode) => ({
       },
       styleOverrides: {
         root: {
-          backgroundColor: mode === 'light' ? '#eef6f8' : '#222430',    
-        }
-      }
+          backgroundColor: mode === 'light' ? '#eef6f8' : '#222430',
+        },
+      },
     },
     MuiDialog: {
       styleOverrides: {
         root: {
           '.MuiDialog-paper': {
             backgroundImage: 'none',
-          }
-        }
-      }
+          },
+        },
+      },
     },
     MuiOutlinedInput: {
       styleOverrides: {
@@ -82,9 +80,9 @@ const getDesignTokens = (mode: PaletteMode) => ({
           '&:hover': {
             boxShadow: `${alpha(mode === 'light' ? '#4693ff' : '#3ea3fe', 0.25)} 0 0 0 2px`,
             borderColor: mode === 'light' ? '#4693ff' : '#3ea3fe',
-          }
-        }
-      }
+          },
+        },
+      },
     },
     MuiFilledInput: {
       styleOverrides: {
@@ -125,14 +123,14 @@ const getDesignTokens = (mode: PaletteMode) => ({
             },
           },
           '&.MuiInputBase-multiline': {
-            padding: '18px 8px'
+            padding: '18px 8px',
           },
           'input[type=number]::-webkit-inner-spin-button': {
-            WebkitAppearance: 'none', 
+            WebkitAppearance: 'none',
             margin: 0,
           },
           'input[type=number]::-webkit-outer-spin-button': {
-            WebkitAppearance: 'none', 
+            WebkitAppearance: 'none',
             margin: 0,
           },
         },
@@ -160,10 +158,9 @@ const getDesignTokens = (mode: PaletteMode) => ({
   shadows: Array(25).fill('none') as Shadows,
 })
 
+const ColorModeContext = createContext<any | null>(null)
 
-const ColorModeContext = createContext<any|null>(null)
-
-export default function ColorModeProvider({children}: any) {
+export default function ColorModeProvider({ children }: any) {
   const [mode, setMode] = useState<PaletteMode>('light')
 
   const modeTheme = createTheme(getDesignTokens(mode))
@@ -171,9 +168,7 @@ export default function ColorModeProvider({children}: any) {
   useEffect(() => {
     const existingPreference = localStorage.getItem('theme-data')
     if (existingPreference) {
-     ( existingPreference === 'light')
-        ? setMode('light')
-        : setMode('dark')
+      existingPreference === 'light' ? setMode('light') : setMode('dark')
     } else {
       setMode('light')
       localStorage.setItem('theme-data', 'light')
@@ -183,14 +178,12 @@ export default function ColorModeProvider({children}: any) {
   const value = {
     mode,
     setMode,
-    modeTheme
+    modeTheme,
   }
 
   return (
     <ColorModeContext.Provider value={value}>
-      <ThemeProvider theme={modeTheme}>
-        {children}
-      </ThemeProvider>
+      <ThemeProvider theme={modeTheme}>{children}</ThemeProvider>
     </ColorModeContext.Provider>
   )
 }

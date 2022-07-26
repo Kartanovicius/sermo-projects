@@ -1,20 +1,20 @@
-import { useState, useEffect } from 'react';
-import { getProjectByCode } from '../services/firebase';
-import { IProject } from '../store/features/project/project.types';
+import { useState, useEffect } from 'react'
+import { getProjectByCode } from '../services/firebase'
+import { IProject } from '../store/features/project/project.types'
 
 export default function useProject(code: number) {
   const [currentProject, setCurrentProject] = useState<IProject | undefined>()
 
   useEffect(() => {
     async function GetProjectByCode(code: number) {
-      const project = await getProjectByCode(code);
-      setCurrentProject(project);
+      const project = await getProjectByCode(code)
+      setCurrentProject(project)
     }
 
     if (code) {
-      GetProjectByCode(code);
+      GetProjectByCode(code)
     }
-  }, [code]);
+  }, [code])
 
-  return { project: currentProject, setProject: setCurrentProject };
+  return { project: currentProject, setProject: setCurrentProject }
 }

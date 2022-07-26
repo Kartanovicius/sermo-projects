@@ -1,13 +1,4 @@
 {
-  "grammarly.selectors": [
-    {
-      "language": "typescriptreact",
-      "scheme": "file",
-      "pattern": "src/components/project/RecurringTasksTable.tsx"
-    },
-    {
-      "language": "typescriptreact",
-      "scheme": "file"
-    }
-  ]
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
 }

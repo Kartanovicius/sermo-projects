@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 //Mui
-import { styled } from '@mui/material/styles';
-import MuiDrawer from '@mui/material/Drawer';
-import { Box, Hidden, Toolbar } from '@mui/material';
+import { styled } from '@mui/material/styles'
+import MuiDrawer from '@mui/material/Drawer'
+import { Box, Hidden, Toolbar } from '@mui/material'
 //Icons
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import IconButton from '@mui/material/IconButton'
+import MenuIcon from '@mui/icons-material/Menu'
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 //Custom
-import { ListComponent } from './ListComponent';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import AvatarMenu from './AvatarMenu';
+import { ListComponent } from './ListComponent'
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
+import AvatarMenu from './AvatarMenu'
 
-const drawerWidth: number = 240;
+const DRAWER_WIDTH = 240
 
 interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
+  open?: boolean
 }
 
 const AppBar = styled(MuiAppBar, {
@@ -28,23 +28,22 @@ const AppBar = styled(MuiAppBar, {
       duration: theme.transitions.duration.leavingScreen,
     }),
     ...(open && {
-      marginLeft: drawerWidth,
-      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: DRAWER_WIDTH,
+      width: `calc(100% - ${DRAWER_WIDTH}px)`,
       transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
       }),
     }),
-  }
-
-}));
+  },
+}))
 
 const DrawerDesktop = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     '& .MuiDrawer-paper': {
       position: 'relative',
       whiteSpace: 'nowrap',
-      width: drawerWidth,
+      width: DRAWER_WIDTH,
       transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
@@ -63,30 +62,28 @@ const DrawerDesktop = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 
       }),
     },
   }),
-);
+)
 
-const DrawerMobile = styled(MuiDrawer)(
-  ({ theme }) => ({
-    zIndex: theme.zIndex.drawer + 2,
-    '& .MuiDrawer-paper': {
-      backgroundColor: theme.palette.background.default,
-      backgroundImage: 'none',
-      borderTopRightRadius: 16,
-      borderBottomRightRadius: 16,
-      paddingTop: 32,
-      paddingRight: 32,
-    }
-  }),
-);
+const DrawerMobile = styled(MuiDrawer)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 2,
+  '& .MuiDrawer-paper': {
+    backgroundColor: theme.palette.background.default,
+    backgroundImage: 'none',
+    borderTopRightRadius: 16,
+    borderBottomRightRadius: 16,
+    paddingTop: 32,
+    paddingRight: 32,
+  },
+}))
 
 export default function Navigation() {
-  const [open, setOpen] = useState(window.innerWidth < 769 ? false : true);
+  const [open, setOpen] = useState(window.innerWidth < 769 ? false : true)
   const toggleDrawer = () => {
-    setOpen(!open);
+    setOpen(!open)
     if (open) {
       document.body.style.overflow = 'hidden'
     }
-  };
+  }
 
   useEffect(() => {
     window.addEventListener('resize', () => {
@@ -99,11 +96,11 @@ export default function Navigation() {
   return (
     <React.Fragment>
       <AppBar position='absolute' open={open}>
-      <Toolbar
+        <Toolbar
           sx={{
             pr: '24px', // keep right padding when drawer closed
             pl: '28px!important',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
           }}
         >
           <IconButton
@@ -119,13 +116,14 @@ export default function Navigation() {
           </IconButton>
 
           <AvatarMenu />
-
         </Toolbar>
       </AppBar>
       <Hidden smDown>
-        <DrawerDesktop variant='permanent' open={open} 
+        <DrawerDesktop
+          variant='permanent'
+          open={open}
           sx={{ '& .MuiDrawer-paper': { borderWidth: 0 } }}
-          PaperProps={{ sx: { backgroundColor: 'background.default' }}}
+          PaperProps={{ sx: { backgroundColor: 'background.default' } }}
         >
           <Toolbar
             sx={{
@@ -136,7 +134,7 @@ export default function Navigation() {
               bgcolor: 'background.default',
             }}
           >
-            <IconButton onClick={toggleDrawer} sx={{ display: open === true ? 'block' : 'none'}}>
+            <IconButton onClick={toggleDrawer} sx={{ display: open === true ? 'block' : 'none' }}>
               <ChevronLeftIcon />
             </IconButton>
           </Toolbar>
@@ -149,11 +147,11 @@ export default function Navigation() {
           open={open}
           onClose={toggleDrawer}
           ModalProps={{
-              keepMounted: true // Better open performance on mobile.
-            }}
+            keepMounted: true, // Better open performance on mobile.
+          }}
         >
           <Box
-            sx={{ width: drawerWidth }}
+            sx={{ width: DRAWER_WIDTH }}
             role='presentation'
             onClick={toggleDrawer}
             onKeyDown={toggleDrawer}

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+// React router
 import { Link, useNavigate } from 'react-router-dom'
 import * as ROUTES from '../constants/routes'
 //Firebase
@@ -7,15 +8,7 @@ import { addDoc, collection } from 'firebase/firestore'
 import { useAuth } from '../context/authContext'
 import { FirebaseError } from 'firebase/app'
 //Material UI
-import { 
-  Typography,
-  Button,
-  CssBaseline,
-  TextField,
-  Grid,
-  Box,
-  Container,
-} from '@mui/material'
+import { Typography, Button, CssBaseline, TextField, Grid, Box, Container } from '@mui/material'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 //Components
 import Copyright from '../components/Copyright'
@@ -28,7 +21,6 @@ interface alertInterface {
   message: string
 }
 
-
 export default function SignUp() {
   const firstnameRef = useRef<HTMLInputElement>()
   const lastnameRef = useRef<HTMLInputElement>()
@@ -36,11 +28,26 @@ export default function SignUp() {
   const passwordRef = useRef<HTMLInputElement>()
   const passwordConfirmRef = useRef<HTMLInputElement>()
 
-  const [firstnameErrorStatus, setfirstnameErrorStatus] = useState<alertInterface>({'status': false, 'message': ''})
-  const [lastnameErrorStatus, setlastnameErrorStatus] = useState<alertInterface>({'status': false, 'message': ''})
-  const [emailErrorStatus, setEmailErrorStatus] = useState<alertInterface>({'status': false, 'message': ''})
-  const [passwordErrorStatus, setPasswordErrorStatus] = useState<alertInterface>({'status': false, 'message': ''})
-  const [passwordConfirmErrorStatus, setPasswordConfirmErrorStatus] = useState<alertInterface>({'status': false, 'message': ''})
+  const [firstnameErrorStatus, setfirstnameErrorStatus] = useState<alertInterface>({
+    status: false,
+    message: '',
+  })
+  const [lastnameErrorStatus, setlastnameErrorStatus] = useState<alertInterface>({
+    status: false,
+    message: '',
+  })
+  const [emailErrorStatus, setEmailErrorStatus] = useState<alertInterface>({
+    status: false,
+    message: '',
+  })
+  const [passwordErrorStatus, setPasswordErrorStatus] = useState<alertInterface>({
+    status: false,
+    message: '',
+  })
+  const [passwordConfirmErrorStatus, setPasswordConfirmErrorStatus] = useState<alertInterface>({
+    status: false,
+    message: '',
+  })
 
   const { createUser } = useAuth()
 
@@ -48,7 +55,11 @@ export default function SignUp() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (firstnameRef.current === undefined || lastnameRef.current === undefined || emailRef.current === undefined) {
+    if (
+      firstnameRef.current === undefined ||
+      lastnameRef.current === undefined ||
+      emailRef.current === undefined
+    ) {
       throw new Error('undefined-ref')
     }
     const nameVal: string = firstnameRef.current.value
@@ -60,28 +71,31 @@ export default function SignUp() {
     try {
       // Check if all inputs filled
       if (nameVal === '' || nameVal === undefined) {
-        setfirstnameErrorStatus({'status': true, 'message': 'First name required'})
+        setfirstnameErrorStatus({ status: true, message: 'First name required' })
       }
       if (lastnameVal === '' || lastnameVal === undefined) {
-        setlastnameErrorStatus({'status': true, 'message': 'Last name required'})
+        setlastnameErrorStatus({ status: true, message: 'Last name required' })
       }
       if (emailVal === '' || emailVal === undefined) {
-        setEmailErrorStatus({'status': true, 'message': 'Email required'})
+        setEmailErrorStatus({ status: true, message: 'Email required' })
       }
       if (passwordVal === '' || passwordVal === undefined) {
-        setPasswordErrorStatus({'status': true, 'message': 'Password required'})
+        setPasswordErrorStatus({ status: true, message: 'Password required' })
       }
       if (passwordConfirmVal === '' || passwordConfirmVal === undefined) {
-        setPasswordConfirmErrorStatus({'status': true, 'message': 'Password confirm required'})
+        setPasswordConfirmErrorStatus({ status: true, message: 'Password confirm required' })
       }
 
       // Does passwords match
-      if (passwordVal !== passwordConfirmVal) {  
+      if (passwordVal !== passwordConfirmVal) {
         throw new Error('Password-is-not-matching')
       }
 
       // Firebase auth
-      const createdUserResult = await createUser(emailRef.current?.value, passwordRef.current?.value)
+      const createdUserResult = await createUser(
+        emailRef.current?.value,
+        passwordRef.current?.value,
+      )
 
       const user: IUser = {
         uid: createdUserResult.user.uid,
@@ -93,21 +107,27 @@ export default function SignUp() {
       }
 
       await addDoc(collection(db, 'users'), user)
-      
+
       navigate(ROUTES.MAIN)
     } catch (e) {
       if (e instanceof FirebaseError) {
-        if(e.message.includes('auth/weak-password')){
-          setPasswordErrorStatus({'status': true, 'message': 'Password should containt minimum 6 characters'})
-          setPasswordConfirmErrorStatus({'status': true, 'message': 'Password should containt minimum 6 characters'})
+        if (e.message.includes('auth/weak-password')) {
+          setPasswordErrorStatus({
+            status: true,
+            message: 'Password should containt minimum 6 characters',
+          })
+          setPasswordConfirmErrorStatus({
+            status: true,
+            message: 'Password should containt minimum 6 characters',
+          })
         }
-        if(e.message.includes('auth/email-already-in-use')){
-          setEmailErrorStatus({'status': true, 'message': 'This email is already in use'})
+        if (e.message.includes('auth/email-already-in-use')) {
+          setEmailErrorStatus({ status: true, message: 'This email is already in use' })
         }
       }
       if (e instanceof Error) {
         if (e.message === 'Password-is-not-matching') {
-          setPasswordConfirmErrorStatus({'status': true, 'message': `Passwords doesn't match`})
+          setPasswordConfirmErrorStatus({ status: true, message: `Passwords doesn't match` })
         }
       }
     }
@@ -117,10 +137,10 @@ export default function SignUp() {
     const passwordVal: string | undefined = passwordRef.current?.value
     const passwordConfirmVal: string | undefined = passwordConfirmRef.current?.value
     if (passwordVal !== '') {
-      setPasswordErrorStatus({'status': false, 'message': ''})
+      setPasswordErrorStatus({ status: false, message: '' })
     }
     if (passwordConfirmVal !== '') {
-      setPasswordConfirmErrorStatus({'status': false, 'message': ''})
+      setPasswordConfirmErrorStatus({ status: false, message: '' })
     }
   }
 
@@ -137,11 +157,16 @@ export default function SignUp() {
           }}
         >
           <Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Box sx={{marginBottom: '40px'}}>
-              <Typography component='h1' variant='h4' align='left' sx={{width: '100%', marginBottom: '8px'}}>
+            <Box sx={{ marginBottom: '40px' }}>
+              <Typography
+                component='h1'
+                variant='h4'
+                align='left'
+                sx={{ width: '100%', marginBottom: '8px' }}
+              >
                 Get started absolutely free.
               </Typography>
-              <Typography variant='body2' align='left' sx={{width: '100%'}}>
+              <Typography variant='body2' align='left' sx={{ width: '100%' }}>
                 Free forever. No credit card needed.
               </Typography>
             </Box>
@@ -158,7 +183,11 @@ export default function SignUp() {
                   autoFocus
                   inputRef={firstnameRef}
                   error={firstnameErrorStatus.status}
-                  onChange={ (event) => event.target.value !== '' ? setfirstnameErrorStatus({'status': false, 'message': ''}) : undefined}
+                  onChange={(event) =>
+                    event.target.value !== ''
+                      ? setfirstnameErrorStatus({ status: false, message: '' })
+                      : undefined
+                  }
                   helperText={firstnameErrorStatus.message}
                 />
               </Grid>
@@ -172,7 +201,11 @@ export default function SignUp() {
                   autoComplete='surname-name'
                   inputRef={lastnameRef}
                   error={lastnameErrorStatus.status}
-                  onChange={ (event) => event.target.value !== '' ? setlastnameErrorStatus({'status': false, 'message': ''}) : undefined}
+                  onChange={(event) =>
+                    event.target.value !== ''
+                      ? setlastnameErrorStatus({ status: false, message: '' })
+                      : undefined
+                  }
                   helperText={lastnameErrorStatus.message}
                 />
               </Grid>
@@ -186,7 +219,11 @@ export default function SignUp() {
                   autoComplete='email'
                   inputRef={emailRef}
                   error={emailErrorStatus.status}
-                  onChange={ (event) => event.target.value !== '' ? setEmailErrorStatus({'status': false, 'message': ''}) : undefined}
+                  onChange={(event) =>
+                    event.target.value !== ''
+                      ? setEmailErrorStatus({ status: false, message: '' })
+                      : undefined
+                  }
                   helperText={emailErrorStatus.message}
                 />
               </Grid>
@@ -221,12 +258,7 @@ export default function SignUp() {
                 />
               </Grid>
             </Grid>
-            <Button
-              type='submit'
-              fullWidth
-              variant='contained'
-              sx={{ mt: 3, mb: 2 }}
-            >
+            <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
               Sign Up
             </Button>
             <Grid container justifyContent='flex-end'>

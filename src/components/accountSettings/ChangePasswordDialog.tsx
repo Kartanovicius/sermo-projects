@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react'
 // Material-ui
-import { AlertColor, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material'
+import {
+  AlertColor,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from '@mui/material'
 // npm packages
 import { AsyncDialogProps } from 'react-dialog-async'
 // Firebase
@@ -11,9 +19,9 @@ import { useAuth } from '../../context/authContext'
 // constants
 import * as ALERTMESSAGE from '../../constants/alerts'
 
-export const ChangePasswordDialog: React.FC<AsyncDialogProps<string, { message: string, variant: AlertColor }[]>> = 
-({ open, handleClose, data }) => {
-
+export const ChangePasswordDialog: React.FC<
+  AsyncDialogProps<string, { message: string; variant: AlertColor }[]>
+> = ({ open, handleClose, data }) => {
   const { currentUser } = useAuth()
   const [previousPassword, setPreviousPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -24,18 +32,15 @@ export const ChangePasswordDialog: React.FC<AsyncDialogProps<string, { message: 
   }, [open])
 
   async function updateUserPassword() {
-    const credential = EmailAuthProvider.credential(
-      currentUser.email,
-      previousPassword
-    )
+    const credential = EmailAuthProvider.credential(currentUser.email, previousPassword)
     try {
       await reauthenticateWithCredential(currentUser, credential)
       await updatePassword(currentUser, newPassword)
-      handleClose([{message: ALERTMESSAGE.PASSWORD_UPDATED, variant: 'success'}])
+      handleClose([{ message: ALERTMESSAGE.PASSWORD_UPDATED, variant: 'success' }])
     } catch (error) {
       if (error instanceof FirebaseError) {
-        if(error.message.includes('auth/wrong-password')) {
-          handleClose([{message: ALERTMESSAGE.INVALID_PASSWORD, variant: 'error'}])
+        if (error.message.includes('auth/wrong-password')) {
+          handleClose([{ message: ALERTMESSAGE.INVALID_PASSWORD, variant: 'error' }])
         }
       }
     }
@@ -53,7 +58,7 @@ export const ChangePasswordDialog: React.FC<AsyncDialogProps<string, { message: 
           type='password'
           fullWidth
           variant='filled'
-          onChange={e => setPreviousPassword(e.target.value)}
+          onChange={(e) => setPreviousPassword(e.target.value)}
         />
         <TextField
           margin='dense'
@@ -63,18 +68,23 @@ export const ChangePasswordDialog: React.FC<AsyncDialogProps<string, { message: 
           fullWidth
           variant='filled'
           helperText='New password must be at least 8 characters long'
-          onChange={e => setNewPassword(e.target.value)}
+          onChange={(e) => setNewPassword(e.target.value)}
         />
       </DialogContent>
       <DialogActions sx={{ px: 3, pb: 2 }}>
-        <Button variant='outlined' onClick={() => handleClose()}>Cancel</Button>
-        <Button variant='contained' 
-          disabled={previousPassword.length < 8 || newPassword.length < 8} 
-          onClick={() => {updateUserPassword()}}
+        <Button variant='outlined' onClick={() => handleClose()}>
+          Cancel
+        </Button>
+        <Button
+          variant='contained'
+          disabled={previousPassword.length < 8 || newPassword.length < 8}
+          onClick={() => {
+            updateUserPassword()
+          }}
         >
           Confirm
         </Button>
       </DialogActions>
-    </Dialog> 
+    </Dialog>
   )
 }
