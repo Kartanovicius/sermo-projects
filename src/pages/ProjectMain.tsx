@@ -13,7 +13,7 @@ import { useGetProjectQuery } from '../store/features/project/project.api'
 
 export default function ProjectMain() {
   const { project_code } = useParams()
-  const { data: project } = useGetProjectQuery(Number(project_code))
+  const { data: project, refetch } = useGetProjectQuery(Number(project_code))
   const { user } = useUser(project !== undefined ? project.owner : '')
 
   return (
@@ -37,10 +37,14 @@ export default function ProjectMain() {
           )}
         </Grid>
         <Grid item xs={12}>
-          {!project ? <Skeleton height={350} /> : <Notes project={project} />}
+          {!project ? <Skeleton height={350} /> : <Notes project={project} refetch={refetch} />}
         </Grid>
         <Grid item xs={12}>
-          {!project ? <Skeleton height={350} /> : <RecurringTasks project={project} />}
+          {!project ? (
+            <Skeleton height={350} />
+          ) : (
+            <RecurringTasks project={project} refetch={refetch} />
+          )}
         </Grid>
       </Grid>
     </Container>

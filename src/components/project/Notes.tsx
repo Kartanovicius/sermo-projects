@@ -1,23 +1,25 @@
 import React from 'react'
 import { Skeleton, Card, Typography, TextField, Box, CircularProgress } from '@mui/material'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useDebounce from '../../hooks/use-debounce'
 import { updateProjectByCode } from '../../services/firebase'
 import { IProject } from '../../store/features/project/project.types'
 
 interface Props {
   project: IProject
+  refetch: () => void
 }
 
-export default function Notes({ project }: Props) {
-  const textInputRef = useRef<HTMLInputElement>()
-  const [value, setValue] = useState('')
+export default function Notes({ project, refetch }: Props) {
+  const [value, setValue] = useState(project.note)
   const [loading, setLoading] = useState(false)
-  const debounceSave = useDebounce(value, 2000)
+  const debounceSave = useDebounce(value, 1000)
 
   useEffect(() => {
     if (project.code) {
-      updateProjectByCode(project.code, { note: value }).then(() => setLoading(false))
+      updateProjectByCode(project.code, { note: value }).then(() => {
+        setLoading(false), refetch()
+      })
     }
   }, [debounceSave])
 
@@ -59,7 +61,6 @@ export default function Notes({ project }: Props) {
               setValue(e.currentTarget.value)
               setLoading(true)
             }}
-            inputRef={textInputRef}
           />
         </Card>
       )}

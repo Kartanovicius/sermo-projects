@@ -21,20 +21,21 @@ import { IProject, IRecurringTask } from '../../store/features/project/project.t
 import RecurringTasksList from './RecurringTasksList'
 // Constants
 import * as ALERTS from '../../constants/alerts'
+import { cloneDeep, now } from 'lodash'
 
 interface Props {
   project: IProject
+  refetch: () => void
 }
 
-export default function RecurringTasks({ project }: Props) {
+export default function RecurringTasks({ project, refetch }: Props) {
   const { code, recurringTasks } = project
 
   const [taskTextError, setTaskTextError] = useState(false)
   const [taskTimeError, setTaskTimeError] = useState(false)
   const taskTextRef = useRef<HTMLInputElement>()
   const taskTimeRef = useRef<HTMLInputElement>()
-  const [recurringTasksList, setRecurringTasksList] =
-    useState<IProject['recurringTasks']>(recurringTasks)
+  const [recurringTasksList, setRecurringTasksList] = useState<IRecurringTask[]>(recurringTasks)
 
   const [openList, setOpenList] = useState(false)
 
@@ -75,7 +76,7 @@ export default function RecurringTasks({ project }: Props) {
   }
 
   const deleteHandler = (code: number, index: number) => {
-    const newRecurringTasks = [...recurringTasksList]
+    const newRecurringTasks = cloneDeep(recurringTasksList)
     newRecurringTasks.splice(index, 1)
     updateProjectByCode(code, { recurringTasks: newRecurringTasks }).then(() =>
       setRecurringTasksList(newRecurringTasks),
@@ -83,7 +84,7 @@ export default function RecurringTasks({ project }: Props) {
   }
 
   const doneCheckboxHandler = (code: number, item: IRecurringTask, index: number) => {
-    const newRecurringTasks = [...recurringTasksList]
+    const newRecurringTasks = cloneDeep(recurringTasksList)
     newRecurringTasks[index]['done'] = !item.done
     updateProjectByCode(code, { recurringTasks: newRecurringTasks }).then(() =>
       setRecurringTasksList(newRecurringTasks),
@@ -101,23 +102,22 @@ export default function RecurringTasks({ project }: Props) {
     if (recurringTasksList.length === 0) {
       setOpenList(false)
     }
+    refetch()
   }, [recurringTasksList])
 
   useEffect(() => {
-    return () => {
-      const newRecurringTasks = [...recurringTasksList]
-      recurringTasksList.forEach((task, index) => {
-        if (task.time - moment().valueOf() < 0 && code !== undefined && code !== null) {
-          newRecurringTasks[index]['done'] = false
-          while (task.time - moment().valueOf() < 0) {
-            newRecurringTasks[index]['time'] = moment(task.time).add(1, 'd').valueOf()
-          }
-          updateProjectByCode(code, { recurringTasks: newRecurringTasks }).then(() =>
-            setRecurringTasksList(newRecurringTasks),
-          )
+    const newRecurringTasks = cloneDeep(recurringTasksList)
+    newRecurringTasks.forEach((task, index) => {
+      if (task.time - now() < 0 && code !== undefined && code !== null) {
+        newRecurringTasks[index]['done'] = false
+        while (task.time - now() < 0) {
+          newRecurringTasks[index]['time'] = moment(task.time).add(1, 'd').valueOf()
         }
-      })
-    }
+        updateProjectByCode(code, { recurringTasks: newRecurringTasks }).then(() =>
+          setRecurringTasksList(newRecurringTasks),
+        )
+      }
+    })
   }, [])
 
   return (
